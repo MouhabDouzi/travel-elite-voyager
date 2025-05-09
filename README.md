@@ -1,73 +1,105 @@
-# Welcome to your Lovable project
+# TravelPlannerElite 🌍✈️
 
-## Project info
+A modern travel planning application that helps users discover and plan their perfect trip. Built with React, TypeScript, and Vite.
 
-**URL**: https://lovable.dev/projects/752d60ce-17bb-4d2a-9ce3-6794e3299147
+## Features ✨
 
-## How can I edit this code?
+- 🗺️ Interactive map with destination markers
+- 🔍 Dynamic filtering by budget, temperature, and preferences
+- 🌤️ Real-time weather information for selected destinations
+- 📅 Customizable trip itineraries
+- 📱 Responsive design for all devices
+- 🎨 Modern UI with smooth animations
+- 🔔 Toast notifications for user feedback
 
-There are several ways of editing your application.
+## Tech Stack 🛠️
 
-**Use Lovable**
+- React 18
+- TypeScript
+- Vite
+- Tailwind CSS
+- Radix UI Components
+- Leaflet.js for maps
+- OpenWeatherMap API
+- Sonner for toast notifications
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/752d60ce-17bb-4d2a-9ce3-6794e3299147) and start prompting.
+## Prerequisites 📋
 
-Changes made via Lovable will be committed automatically to this repo.
+- Node.js 16+
+- npm or yarn
+- OpenWeatherMap API key
 
-**Use your preferred IDE**
+## Setup Instructions 🚀
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/travel-planner-elite.git
+   cd travel-planner-elite
+   ```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-Follow these steps:
+3. Create a `.env` file in the root directory:
+   ```
+   VITE_OPENWEATHER_API_KEY=your_api_key_here
+   ```
+   Get your API key from [OpenWeatherMap](https://openweathermap.org/api)
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+5. Build for production:
+   ```bash
+   npm run build
+   ```
 
-# Step 3: Install the necessary dependencies.
-npm i
+## Project Structure 📁
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+src/
+├── components/     # React components
+├── lib/           # Utility functions and services
+├── data/          # Mock data and types
+├── pages/         # Page components
+└── styles/        # Global styles
 ```
 
-**Edit a file directly in GitHub**
+## Development 🛠️
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+- `npm run type-check` - Run TypeScript type checking
 
-**Use GitHub Codespaces**
+## Deployment 🚀
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1. Create a Vercel account if you haven't already
+2. Connect your GitHub repository
+3. Add environment variables in Vercel dashboard:
+   - `VITE_OPENWEATHER_API_KEY`
+4. Deploy!
 
-## What technologies are used for this project?
+## Contributing 🤝
 
-This project is built with:
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## License 📝
 
-## How can I deploy this project?
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-Simply open [Lovable](https://lovable.dev/projects/752d60ce-17bb-4d2a-9ce3-6794e3299147) and click on Share -> Publish.
+## Acknowledgments 🙏
 
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+- [OpenWeatherMap](https://openweathermap.org/) for weather data
+- [Leaflet](https://leafletjs.com/) for maps
+- [Radix UI](https://www.radix-ui.com/) for accessible components
+- [Tailwind CSS](https://tailwindcss.com/) for styling

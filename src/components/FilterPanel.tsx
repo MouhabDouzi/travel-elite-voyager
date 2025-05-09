@@ -1,87 +1,130 @@
+import React, { useState } from 'react';
+import { Card } from '@/components/ui/card';
+import { Slider } from '@/components/ui/slider';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Destination, destinations } from '@/data/destinations';
+import { filterDestinations } from '@/lib/filterService';
 
-import React from 'react';
-import { Slider } from "@/components/ui/slider";
-import { Label } from "@/components/ui/label";
-import { 
-  Calendar, 
-  DollarSign, 
-  Thermometer, 
-  Sun, 
-  CloudRain,
-  Globe 
-} from "lucide-react";
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
+interface FilterPanelProps {
+  onFilterChange: (destinations: Destination[]) => void;
+}
 
-const FilterPanel: React.FC = () => {
+const FilterPanel: React.FC<FilterPanelProps> = ({ onFilterChange }) => {
+  const [budget, setBudget] = useState<number>(1000);
+  const [temperature, setTemperature] = useState<[number, number]>([0, 40]);
+  const [purposes, setPurposes] = useState<string[]>([]);
+  const [weather, setWeather] = useState<string[]>([]);
+
+  const handleFilterChange = () => {
+    const filtered = filterDestinations(destinations, {
+      budget,
+      temperature,
+      purposes,
+      weather,
+    });
+    onFilterChange(filtered);
+  };
+
+  React.useEffect(() => {
+    handleFilterChange();
+  }, [budget, temperature, purposes, weather]);
+
   return (
-    <div className="bg-white rounded-lg border p-5 shadow-sm">
-      <h2 className="text-xl font-semibold text-travel-blue mb-4">Refine Your Search</h2>
-      
-      <Separator className="my-4" />
-      
+    <Card className="p-6">
+      <h2 className="text-xl font-semibold text-travel-blue mb-6">Filter Destinations</h2>
+
       <div className="space-y-6">
         {/* Budget Filter */}
         <div>
-          <div className="flex items-center mb-2">
-            <DollarSign className="h-4 w-4 mr-2 text-travel-teal" />
-            <Label className="text-sm font-medium">Budget Range</Label>
-          </div>
-          <div className="mb-1 flex justify-between text-sm text-gray-500">
-            <span>$500</span>
-            <span>$10,000+</span>
-          </div>
-          <Slider defaultValue={[2500]} max={10000} min={500} step={100} />
-          <div className="mt-2 text-center text-sm font-medium">$2,500</div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Maximum Budget: ${budget}
+          </label>
+          <Slider
+            value={[budget]}
+            onValueChange={(value) => setBudget(value[0])}
+            min={0}
+            max={5000}
+            step={100}
+            className="w-full"
+          />
         </div>
-        
-        {/* Temperature */}
+
+        {/* Temperature Range */}
         <div>
-          <div className="flex items-center mb-2">
-            <Thermometer className="h-4 w-4 mr-2 text-travel-teal" />
-            <Label className="text-sm font-medium">Temperature (°C)</Label>
-          </div>
-          <div className="mb-1 flex justify-between text-sm text-gray-500">
-            <span>0°C</span>
-            <span>40°C</span>
-          </div>
-          <Slider defaultValue={[15, 30]} max={40} min={0} step={1} />
-          <div className="mt-2 text-center text-sm font-medium">15°C - 30°C</div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Temperature Range: {temperature[0]}°C - {temperature[1]}°C
+          </label>
+          <Slider
+            value={temperature}
+            onValueChange={setTemperature}
+            min={-20}
+            max={50}
+            step={1}
+            className="w-full"
+          />
         </div>
-        
-        {/* Trip Purpose */}
+
+        {/* Travel Purposes */}
         <div>
-          <div className="flex items-center mb-2">
-            <Globe className="h-4 w-4 mr-2 text-travel-teal" />
-            <Label className="text-sm font-medium">Trip Purpose</Label>
-          </div>
-          <div className="grid grid-cols-2 gap-2 mt-2">
-            <Button variant="outline" className="justify-start" size="sm">Leisure</Button>
-            <Button variant="outline" className="justify-start" size="sm">Business</Button>
-            <Button variant="outline" className="justify-start" size="sm">Adventure</Button>
-            <Button variant="outline" className="justify-start" size="sm">Romantic</Button>
-            <Button variant="outline" className="justify-start" size="sm">Family</Button>
-            <Button variant="outline" className="justify-start" size="sm">Culture</Button>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Travel Purposes
+          </label>
+          <div className="space-y-2">
+            {['Beach', 'Mountain', 'City', 'Cultural', 'Adventure'].map((purpose) => (
+              <div key={purpose} className="flex items-center space-x-2">
+                <Checkbox
+                  id={purpose}
+                  checked={purposes.includes(purpose)}
+                  onCheckedChange={(checked) => {
+                    setPurposes((prev) =>
+                      checked
+                        ? [...prev, purpose]
+                        : prev.filter((p) => p !== purpose)
+                    );
+                  }}
+                />
+                <label
+                  htmlFor={purpose}
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  {purpose}
+                </label>
+              </div>
+            ))}
           </div>
         </div>
-        
-        {/* Weather */}
+
+        {/* Weather Preferences */}
         <div>
-          <div className="flex items-center mb-2">
-            <Sun className="h-4 w-4 mr-2 text-travel-teal" />
-            <Label className="text-sm font-medium">Weather Preference</Label>
-          </div>
-          <div className="grid grid-cols-2 gap-2 mt-2">
-            <Button variant="outline" className="justify-start" size="sm">Sunny</Button>
-            <Button variant="outline" className="justify-start" size="sm">Cloudy</Button>
-            <Button variant="outline" className="justify-start" size="sm">Rainy</Button>
-            <Button variant="outline" className="justify-start" size="sm">Snowy</Button>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Weather Preferences
+          </label>
+          <div className="space-y-2">
+            {['Sunny', 'Rainy', 'Snowy', 'Cloudy'].map((condition) => (
+              <div key={condition} className="flex items-center space-x-2">
+                <Checkbox
+                  id={condition}
+                  checked={weather.includes(condition)}
+                  onCheckedChange={(checked) => {
+                    setWeather((prev) =>
+                      checked
+                        ? [...prev, condition]
+                        : prev.filter((w) => w !== condition)
+                    );
+                  }}
+                />
+                <label
+                  htmlFor={condition}
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  {condition}
+                </label>
+              </div>
+            ))}
           </div>
         </div>
-        
-        <Button className="w-full mt-4 bg-travel-teal hover:bg-travel-teal/90">Apply Filters</Button>
       </div>
-    </div>
+    </Card>
   );
 };
 

@@ -1,8 +1,29 @@
-
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 const HeroSection: React.FC = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const handlePlanTrip = () => {
+    if (!user) {
+      toast.error('Please log in to plan a trip');
+      navigate('/login');
+      return;
+    }
+    navigate('/dashboard');
+  };
+
+  const handleExploreDestinations = () => {
+    const destinationsSection = document.getElementById('destinations');
+    if (destinationsSection) {
+      destinationsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="relative h-[85vh] flex items-center overflow-hidden">
       {/* Background with overlay */}
@@ -26,13 +47,15 @@ const HeroSection: React.FC = () => {
             <Button 
               size="lg" 
               className="bg-travel-teal hover:bg-travel-teal/90 text-white"
+              onClick={handlePlanTrip}
             >
-              Plan My Trip
+              {user ? 'Go to Dashboard' : 'Plan My Trip'}
             </Button>
             <Button 
               variant="outline" 
               size="lg"
               className="bg-white/10 border-white hover:bg-white/20"
+              onClick={handleExploreDestinations}
             >
               Explore Destinations
             </Button>
@@ -67,7 +90,10 @@ const HeroSection: React.FC = () => {
               </select>
             </div>
             <div className="flex items-end">
-              <Button className="w-full bg-travel-blue hover:bg-travel-blue/90">
+              <Button 
+                className="w-full bg-travel-blue hover:bg-travel-blue/90"
+                onClick={handleExploreDestinations}
+              >
                 Search Destinations
               </Button>
             </div>
