@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
@@ -44,9 +44,8 @@ const HomePage: React.FC = () => {
     toast.success(`Selected ${destination.name}`);
   }, []);
 
-  const handleTripDaysChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
-    if (!isNaN(value) && value >= 1 && value <= 14) {
+  const handleTripDaysChange = useCallback((value: number) => {
+    if (value >= 1 && value <= 14) {
       setTripDays(value);
       toast.info(`Trip duration updated to ${value} days`);
     }
