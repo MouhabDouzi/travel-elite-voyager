@@ -2,9 +2,9 @@ import axios from 'axios';
 import { Destination, TravelRecommendation, WeatherInfo } from '../types/travel';
 
 const API_KEYS = {
-  OPENWEATHER: import.meta.env.VITE_OPENWEATHER_API_KEY,
-  GEOAPIFY: import.meta.env.VITE_GEOAPIFY_API_KEY,
-  OPENCAGE: import.meta.env.VITE_OPENCAGE_API_KEY,
+  OPENWEATHER: '340aade475a3a32e534f140253953d42',
+  GEOAPIFY: '8005e58de5eb4f1ba187caad6284e1b3',
+  OPENCAGE: '0631966cca624a7aaef3cba10f77e6cc',
 };
 
 interface ScrapedDestination {
@@ -87,7 +87,28 @@ const mockDestinations: Destination[] = [
       windSpeed: 5,
     },
   },
-  // Add more mock destinations as needed
+  {
+    id: '2',
+    name: 'Tokyo',
+    country: 'Japan',
+    description: 'A vibrant blend of traditional and modern culture',
+    imageUrl: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf',
+    coordinates: {
+      lat: 35.6762,
+      lng: 139.6503,
+    },
+    rating: 4.7,
+    reviews: 12000,
+    priceLevel: 4,
+    activities: ['Shibuya Crossing', 'Tokyo Skytree', 'Senso-ji Temple'],
+    weather: {
+      temperature: 22,
+      condition: 'Clouds',
+      description: 'scattered clouds',
+      humidity: 70,
+      windSpeed: 3,
+    },
+  },
 ];
 
 export const travelDataService = {
@@ -109,10 +130,6 @@ export const travelDataService = {
 
   async fetchWeatherInfo(lat: number, lng: number): Promise<WeatherInfo> {
     try {
-      if (!API_KEYS.OPENWEATHER) {
-        throw new Error('OpenWeather API key is not configured');
-      }
-
       const response = await axios.get(
         `https://api.openweathermap.org/data/2.5/weather`,
         {
@@ -155,9 +172,9 @@ export const travelDataService = {
         tips: [
           'Best time to visit: April to October',
           'Local currency: EUR',
-          'Language: French',
+          'Language: Local language',
           'Emergency number: 112',
-          'Local customs: Greet with kisses on both cheeks',
+          'Local customs: Respect local traditions',
         ],
         weather: {
           temperature: 20,
@@ -166,14 +183,10 @@ export const travelDataService = {
           humidity: 65,
           windSpeed: 5,
         },
-        localTransportation: ['Metro', 'Bus', 'Taxi'],
-        accommodation: {
-          budget: ['Hostels', 'Budget Hotels'],
-          midRange: ['3-star Hotels', 'Apartments'],
-          luxury: ['5-star Hotels', 'Luxury Apartments'],
-        },
-        localCuisine: ['Croissants', 'Wine', 'Cheese'],
-        culturalTips: ['Dress well', 'Learn basic French phrases'],
+        localTransportation: ['Public Transport', 'Taxis', 'Rental Cars'],
+        accommodation: ['Hotels', 'Apartments', 'Hostels'],
+        localCuisine: ['Local specialties', 'Street food', 'Fine dining'],
+        culturalTips: ['Dress appropriately', 'Learn basic phrases'],
       };
     } catch (error) {
       console.error('Error fetching travel recommendation:', error);

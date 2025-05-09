@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Card } from './ui/card';
-import { getWeatherForLocation, getWeatherIconUrl, WeatherData } from '../lib/weatherService';
-import { Destination } from '../data/destinations';
+import { travelDataService } from '../services/travelDataService';
+import { Destination, WeatherInfo as WeatherInfoType } from '../types/travel';
 import { Droplets, Wind } from 'lucide-react';
-import { toast } from 'sonner';
 
 interface WeatherInfoProps {
   destination: Destination;
 }
 
 export const WeatherInfo: React.FC<WeatherInfoProps> = ({ destination }) => {
-  const [weather, setWeather] = useState<WeatherData | null>(null);
+  const [weather, setWeather] = useState<WeatherInfoType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -18,14 +17,14 @@ export const WeatherInfo: React.FC<WeatherInfoProps> = ({ destination }) => {
     const fetchWeather = async () => {
       try {
         setLoading(true);
-        toast.loading('Fetching weather data...');
-        const data = await getWeatherForLocation(destination.latitude, destination.longitude);
+        const data = await travelDataService.fetchWeatherInfo(
+          destination.coordinates.lat,
+          destination.coordinates.lng
+        );
         setWeather(data);
         setError(null);
-        toast.success('Weather data updated');
       } catch (err) {
         setError('Failed to fetch weather data');
-        toast.error('Failed to fetch weather data');
         console.error('Weather fetch error:', err);
       } finally {
         setLoading(false);
@@ -59,11 +58,12 @@ export const WeatherInfo: React.FC<WeatherInfoProps> = ({ destination }) => {
     <Card className="p-4 hover:shadow-lg transition-shadow">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-medium text-travel-blue">Current Weather</h3>
-        <img
-          src={getWeatherIconUrl(weather.icon)}
-          alt={weather.description}
-          className="w-12 h-12"
-        />
+        <div className="text-4xl">
+          {weather.condition === 'Clear' && '☀️'}
+          {weather.condition === 'Clouds' && '☁️'}
+          {weather.condition === 'Rain' && '🌧️'}
+          {weather.condition === 'Snow' && '❄️'}
+        </div>
       </div>
 
       <div className="space-y-3">

@@ -2,32 +2,55 @@ import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Destination, destinations } from '@/data/destinations';
-import { filterDestinations } from '@/lib/filterService';
+import { Destination } from '@/types/travel';
 
 interface FilterPanelProps {
-  onFilterChange: (destinations: Destination[]) => void;
+  onFilterChange: (filters: {
+    continent?: string;
+    budget?: 'budget' | 'midRange' | 'luxury';
+    activities?: string[];
+    weather?: string;
+    duration?: number;
+  }) => void;
+  onTripDaysChange: (days: number) => void;
+  onPlanTrip: () => void;
+  selectedDestination: Destination | null;
+  tripDays: number;
+  selectedPurpose: string;
+  setSelectedPurpose: (purpose: string) => void;
+  budget: number;
+  setBudget: (budget: number) => void;
+  loading: boolean;
 }
 
-export const FilterPanel: React.FC<FilterPanelProps> = ({ onFilterChange }) => {
-  const [budget, setBudget] = useState<number>(1000);
+export const FilterPanel: React.FC<FilterPanelProps> = ({
+  onFilterChange,
+  onTripDaysChange,
+  onPlanTrip,
+  selectedDestination,
+  tripDays,
+  selectedPurpose,
+  setSelectedPurpose,
+  budget,
+  setBudget,
+  loading,
+}) => {
   const [temperature, setTemperature] = useState<[number, number]>([0, 40]);
   const [purposes, setPurposes] = useState<string[]>([]);
   const [weather, setWeather] = useState<string[]>([]);
 
   const handleFilterChange = () => {
-    const filtered = filterDestinations(destinations, {
-      budget,
-      temperature,
-      purposes,
-      weather,
+    onFilterChange({
+      budget: budget < 1000 ? 'budget' : budget < 3000 ? 'midRange' : 'luxury',
+      activities: purposes,
+      weather: weather[0],
+      duration: tripDays,
     });
-    onFilterChange(filtered);
   };
 
   React.useEffect(() => {
     handleFilterChange();
-  }, [budget, temperature, purposes, weather]);
+  }, [budget, temperature, purposes, weather, tripDays]);
 
   return (
     <Card className="p-6">
@@ -49,16 +72,16 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({ onFilterChange }) => {
           />
         </div>
 
-        {/* Temperature Range */}
+        {/* Trip Duration */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Temperature Range: {temperature[0]}°C - {temperature[1]}°C
+            Trip Duration: {tripDays} days
           </label>
           <Slider
-            value={temperature}
-            onValueChange={(value: [number, number]) => setTemperature(value)}
-            min={-20}
-            max={50}
+            value={[tripDays]}
+            onValueChange={(value) => onTripDaysChange(value[0])}
+            min={1}
+            max={30}
             step={1}
             className="w-full"
           />
@@ -123,6 +146,19 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({ onFilterChange }) => {
             ))}
           </div>
         </div>
+
+        {/* Plan Trip Button */}
+        <button
+          onClick={onPlanTrip}
+          disabled={!selectedDestination || loading}
+          className={`w-full py-2 px-4 rounded-lg ${
+            selectedDestination && !loading
+              ? 'bg-blue-600 text-white hover:bg-blue-700'
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          }`}
+        >
+          {loading ? 'Planning...' : 'Plan Trip'}
+        </button>
       </div>
     </Card>
   );
