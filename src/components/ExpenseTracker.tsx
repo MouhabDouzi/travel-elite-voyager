@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { useTravelHistory } from '@/contexts/TravelHistoryContext';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { formatCurrency } from '@/lib/utils';
+import { useTravelHistory } from '../contexts/TravelHistoryContext';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { formatCurrency } from '../lib/utils';
 import { Plus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 

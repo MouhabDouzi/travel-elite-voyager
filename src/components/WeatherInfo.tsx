@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { getWeatherForLocation, getWeatherIconUrl, WeatherData } from '@/lib/weatherService';
-import { Destination } from '@/data/destinations';
+import { Card } from './ui/card';
+import { getWeatherForLocation, getWeatherIconUrl, WeatherData } from '../lib/weatherService';
+import { Destination } from '../data/destinations';
 import { Cloud, Droplets, Wind } from 'lucide-react';
 import { toast } from 'sonner';
 
