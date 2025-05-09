@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Card } from './ui/card';
 import { Destination } from '../data/destinations';
 import { generateItinerary } from '../lib/itineraryService';
-import { CalendarIcon, ClockIcon, DollarSignIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface ItineraryPreviewProps {
