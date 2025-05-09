@@ -63,12 +63,18 @@ const CommunityFeed: React.FC = () => {
     toast.success('Liked post!');
   };
 
-  const handleComment = (postId: string) => {
-    toast.info('Comment feature coming soon!');
+  const handleComment = (postId: string): void => {
+    const post = posts.find(p => p.id === postId);
+    if (post) {
+      toast.info('Comment feature coming soon!');
+    }
   };
 
-  const handleShare = (postId: string) => {
-    toast.info('Share feature coming soon!');
+  const handleShare = (postId: string): void => {
+    const post = posts.find(p => p.id === postId);
+    if (post) {
+      toast.info('Share feature coming soon!');
+    }
   };
 
   const handleCreatePost = async () => {
