@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import axios from 'axios';
 import { FilterPanel } from '../components/FilterPanel';
 import { MapView } from '../components/MapView';
 import { WeatherInfo } from '../components/WeatherInfo';
@@ -18,6 +17,7 @@ import { TripPurposeSelector } from '../components/TripPurposeSelector';
 import { BudgetSlider } from '../components/BudgetSlider';
 import { DestinationCard } from '../components/DestinationCard';
 import { destinations } from '../data/destinations';
+import { travelDataService } from '../services/travelDataService';
 
 type TabType = 'discover' | 'weather' | 'budget';
 
@@ -63,22 +63,14 @@ const HomePage: React.FC = () => {
     }
 
     try {
-      const response = await axios.post('/api/trips', {
-        destination: selectedDestination,
-        days: tripDays,
-        purpose: selectedPurpose,
-        budget: budget
-      });
-
-      if (response.data.success) {
-        toast.success('Trip planned successfully!');
-        navigate('/my-trips');
-      }
+      const recommendation = await travelDataService.fetchTravelRecommendation(selectedDestination.name);
+      toast.success('Trip planned successfully!');
+      navigate('/my-trips', { state: { recommendation } });
     } catch (error) {
       console.error('Error planning trip:', error);
       toast.error('Failed to plan trip. Please try again.');
     }
-  }, [user, selectedDestination, tripDays, selectedPurpose, budget, navigate]);
+  }, [user, selectedDestination, navigate]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">

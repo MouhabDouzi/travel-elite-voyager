@@ -5,8 +5,6 @@ const API_KEYS = {
   OPENWEATHER: import.meta.env.VITE_OPENWEATHER_API_KEY,
   GEOAPIFY: import.meta.env.VITE_GEOAPIFY_API_KEY,
   OPENCAGE: import.meta.env.VITE_OPENCAGE_API_KEY,
-  GOOGLE_PLACES: 'AIzaSyB0YyDTa0qqOjIerob2VTIw_XRrjr7q2oE',
-  TRIPADVISOR: 'tripadvisor_api_key_here'
 };
 
 interface ScrapedDestination {
@@ -65,6 +63,33 @@ const generateLocalTips = (data: any): string[] => {
   ];
 };
 
+// Mock data for development
+const mockDestinations: Destination[] = [
+  {
+    id: '1',
+    name: 'Paris',
+    country: 'France',
+    description: 'The City of Light',
+    imageUrl: 'https://images.unsplash.com/photo-1502602898657-3a917209c20e',
+    coordinates: {
+      lat: 48.8566,
+      lng: 2.3522,
+    },
+    rating: 4.8,
+    reviews: 15000,
+    priceLevel: 3,
+    activities: ['Eiffel Tower', 'Louvre Museum', 'Notre-Dame'],
+    weather: {
+      temperature: 20,
+      condition: 'Clear',
+      description: 'clear sky',
+      humidity: 65,
+      windSpeed: 5,
+    },
+  },
+  // Add more mock destinations as needed
+];
+
 export const travelDataService = {
   async fetchDestinations(filters?: {
     continent?: string;
@@ -74,52 +99,8 @@ export const travelDataService = {
     duration?: number;
   }): Promise<Destination[]> {
     try {
-      // Fetch from TripAdvisor API
-      const tripAdvisorResponse = await axios.get(
-        `https://api.tripadvisor.com/api/v1/locations/search`,
-        {
-          params: {
-            key: API_KEYS.TRIPADVISOR,
-            category: 'attractions',
-            ...filters,
-          },
-        }
-      );
-
-      // Fetch from Google Places API for additional data
-      const destinations = await Promise.all(
-        tripAdvisorResponse.data.data.map(async (place: any) => {
-          const googleResponse = await axios.get(
-            `https://maps.googleapis.com/maps/api/place/details/json`,
-            {
-              params: {
-                place_id: place.place_id,
-                key: API_KEYS.GOOGLE_PLACES,
-                fields: 'name,formatted_address,geometry,photos,rating,reviews',
-              },
-            }
-          );
-
-          return {
-            id: place.location_id,
-            name: place.name,
-            country: place.address_string.split(',').pop()?.trim(),
-            description: place.description,
-            imageUrl: place.photo?.images?.large?.url,
-            coordinates: {
-              lat: place.latitude,
-              lng: place.longitude,
-            },
-            rating: place.rating,
-            reviews: place.num_reviews,
-            priceLevel: place.price_level,
-            activities: place.activities || [],
-            weather: await this.fetchWeatherInfo(place.latitude, place.longitude),
-          };
-        })
-      );
-
-      return destinations;
+      // For development, return mock data
+      return mockDestinations;
     } catch (error) {
       console.error('Error fetching destinations:', error);
       throw new Error('Failed to fetch destinations');
@@ -128,6 +109,10 @@ export const travelDataService = {
 
   async fetchWeatherInfo(lat: number, lng: number): Promise<WeatherInfo> {
     try {
+      if (!API_KEYS.OPENWEATHER) {
+        throw new Error('OpenWeather API key is not configured');
+      }
+
       const response = await axios.get(
         `https://api.openweathermap.org/data/2.5/weather`,
         {
@@ -149,50 +134,46 @@ export const travelDataService = {
       };
     } catch (error) {
       console.error('Error fetching weather:', error);
-      throw new Error('Failed to fetch weather information');
+      // Return mock weather data if API call fails
+      return {
+        temperature: 20,
+        condition: 'Clear',
+        description: 'clear sky',
+        humidity: 65,
+        windSpeed: 5,
+      };
     }
   },
 
   async fetchTravelRecommendation(destination: string): Promise<TravelRecommendation> {
     try {
-      // Fetch from TripAdvisor API
-      const response = await axios.get(
-        `https://api.tripadvisor.com/api/v1/location/${destination}/details`,
-        {
-          params: {
-            key: API_KEYS.TRIPADVISOR,
-            fields: 'name,description,attractions,reviews,photos',
-          },
-        }
-      );
-
-      // Fetch from Google Places API for additional data
-      const googleResponse = await axios.get(
-        `https://maps.googleapis.com/maps/api/place/textsearch/json`,
-        {
-          params: {
-            query: `${response.data.name} tourist attractions`,
-            key: API_KEYS.GOOGLE_PLACES,
-          },
-        }
-      );
-
+      // For development, return mock data
       return {
-        destination: response.data.name,
-        activities: googleResponse.data.results.map((place: any) => place.name),
-        bestTime: calculateBestTime(response.data.weather_data),
+        destination,
+        activities: ['Sightseeing', 'Shopping', 'Dining'],
+        bestTime: 'April to October',
         tips: [
-          ...response.data.travel_tips,
-          ...generateLocalTips(response.data),
+          'Best time to visit: April to October',
+          'Local currency: EUR',
+          'Language: French',
+          'Emergency number: 112',
+          'Local customs: Greet with kisses on both cheeks',
         ],
-        weather: await this.fetchWeatherInfo(
-          response.data.latitude,
-          response.data.longitude
-        ),
-        localTransportation: response.data.transportation_options,
-        accommodation: response.data.accommodation_options,
-        localCuisine: response.data.local_food,
-        culturalTips: response.data.cultural_tips,
+        weather: {
+          temperature: 20,
+          condition: 'Clear',
+          description: 'clear sky',
+          humidity: 65,
+          windSpeed: 5,
+        },
+        localTransportation: ['Metro', 'Bus', 'Taxi'],
+        accommodation: {
+          budget: ['Hostels', 'Budget Hotels'],
+          midRange: ['3-star Hotels', 'Apartments'],
+          luxury: ['5-star Hotels', 'Luxury Apartments'],
+        },
+        localCuisine: ['Croissants', 'Wine', 'Cheese'],
+        culturalTips: ['Dress well', 'Learn basic French phrases'],
       };
     } catch (error) {
       console.error('Error fetching travel recommendation:', error);
