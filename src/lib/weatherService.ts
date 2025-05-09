@@ -15,8 +15,7 @@ export const getWeatherForLocation = async (
   latitude: number,
   longitude: number
 ): Promise<WeatherData> => {
-  const apiKey = import.meta.env.VITE_OPENWEATHER_API_KEY;
-  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`;
+  const url = `${BASE_URL}/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${OPENWEATHER_API_KEY}`;
 
   try {
     const response = await fetch(url);

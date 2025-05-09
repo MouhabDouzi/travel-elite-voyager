@@ -3,8 +3,10 @@ import { Destination, TravelRecommendation, WeatherInfo } from '../types/travel'
 
 const API_KEYS = {
   OPENWEATHER: import.meta.env.VITE_OPENWEATHER_API_KEY,
-  GOOGLE_PLACES: import.meta.env.VITE_GOOGLE_PLACES_API_KEY,
-  TRIPADVISOR: import.meta.env.VITE_TRIPADVISOR_API_KEY,
+  GEOAPIFY: import.meta.env.VITE_GEOAPIFY_API_KEY,
+  OPENCAGE: import.meta.env.VITE_OPENCAGE_API_KEY,
+  GOOGLE_PLACES: 'AIzaSyB0YyDTa0qqOjIerob2VTIw_XRrjr7q2oE',
+  TRIPADVISOR: 'tripadvisor_api_key_here'
 };
 
 interface ScrapedDestination {
