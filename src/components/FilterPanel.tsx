@@ -56,7 +56,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({ onFilterChange }) => {
           </label>
           <Slider
             value={temperature}
-            onValueChange={setTemperature}
+            onValueChange={(value: [number, number]) => setTemperature(value)}
             min={-20}
             max={50}
             step={1}
