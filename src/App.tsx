@@ -1,76 +1,56 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from '@/contexts/AuthContext';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { AuthProvider } from '@/contexts/AuthContext';
 import { TravelHistoryProvider } from '@/contexts/TravelHistoryContext';
-import Index from '@/pages/Index';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+// Pages
 import HomePage from '@/pages/HomePage';
-import LoginPage from '@/pages/LoginPage';
-import RegisterPage from '@/pages/RegisterPage';
-import DashboardPage from '@/pages/DashboardPage';
-import MyTripsPage from '@/pages/MyTripsPage';
-import AdminPage from '@/pages/AdminPage';
-import { useAuth } from '@/contexts/AuthContext';
+import LoginPage from '@/pages/auth/LoginPage';
+import RegisterPage from '@/pages/auth/RegisterPage';
+import DashboardPage from '@/pages/user/DashboardPage';
+import MyTripsPage from '@/pages/user/MyTripsPage';
+import NotFound from '@/pages/NotFound';
 
-// Protected Route component
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user } = useAuth();
-  if (!user) {
-    return <Navigate to="/login" />;
-  }
-  return <>{children}</>;
-};
+// Admin Pages
+import AdminDashboard from '@/pages/admin/DashboardPage';
+import AdminUsers from '@/pages/admin/UsersPage';
+import AdminDestinations from '@/pages/admin/DestinationsPage';
+import AdminAnalytics from '@/pages/admin/AnalyticsPage';
 
-// Admin Route component
-const AdminRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user } = useAuth();
-  if (!user || user.role !== 'admin') {
-    return <Navigate to="/" />;
-  }
-  return <>{children}</>;
-};
+const queryClient = new QueryClient();
 
-const App: React.FC = () => {
+function App() {
   return (
-    <Router>
+    <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <AuthProvider>
           <TravelHistoryProvider>
-            <Routes>
-              {/* Public routes */}
-              <Route path="/" element={<Index />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-              
-              {/* Protected routes */}
-              <Route path="/home" element={
-                <ProtectedRoute>
-                  <HomePage />
-                </ProtectedRoute>
-              } />
-              <Route path="/dashboard" element={
-                <ProtectedRoute>
-                  <DashboardPage />
-                </ProtectedRoute>
-              } />
-              <Route path="/my-trips" element={
-                <ProtectedRoute>
-                  <MyTripsPage />
-                </ProtectedRoute>
-              } />
-              
-              {/* Admin routes */}
-              <Route path="/admin" element={
-                <AdminRoute>
-                  <AdminPage />
-                </AdminRoute>
-              } />
-            </Routes>
+            <Router>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/my-trips" element={<MyTripsPage />} />
+                
+                {/* Admin Routes */}
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/admin/users" element={<AdminUsers />} />
+                <Route path="/admin/destinations" element={<AdminDestinations />} />
+                <Route path="/admin/analytics" element={<AdminAnalytics />} />
+                
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+              <Toaster />
+            </Router>
           </TravelHistoryProvider>
         </AuthProvider>
       </ThemeProvider>
-    </Router>
+    </QueryClientProvider>
   );
-};
+}
 
 export default App;
