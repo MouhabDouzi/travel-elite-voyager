@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import axios from 'axios';
 import { FilterPanel } from '../components/FilterPanel';
 import { MapView } from '../components/MapView';
 import { WeatherInfo } from '../components/WeatherInfo';
@@ -43,13 +44,13 @@ const HomePage: React.FC = () => {
 
   const handleTripDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
-    if (value >= 1 && value <= 14) {
+    if (!isNaN(value) && value >= 1 && value <= 14) {
       setTripDays(value);
       toast.info(`Trip duration updated to ${value} days`);
     }
   };
 
-  const handlePlanTrip = () => {
+  const handlePlanTrip = async () => {
     if (!user) {
       toast.error('Please log in to plan a trip');
       navigate('/login');
@@ -59,7 +60,23 @@ const HomePage: React.FC = () => {
       toast.error('Please select a destination first');
       return;
     }
-    navigate('/my-trips');
+
+    try {
+      const response = await axios.post('/api/trips', {
+        destination: selectedDestination,
+        days: tripDays,
+        purpose: selectedPurpose,
+        budget: budget
+      });
+
+      if (response.data.success) {
+        toast.success('Trip planned successfully!');
+        navigate('/my-trips');
+      }
+    } catch (error) {
+      console.error('Error planning trip:', error);
+      toast.error('Failed to plan trip. Please try again.');
+    }
   };
 
   return (
