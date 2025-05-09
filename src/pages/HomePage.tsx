@@ -7,6 +7,7 @@ import WeatherInfo from '@/components/WeatherInfo';
 import ItineraryPreview from '@/components/ItineraryPreview';
 import AIAssistant from '@/components/AIAssistant';
 import CommunityFeed from '@/components/CommunityFeed';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { Destination } from '@/data/destinations';
 import { toast } from 'sonner';
 import { Toaster } from 'sonner';
@@ -55,32 +56,33 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background text-foreground">
       <Toaster position="top-right" />
       
-      <header className="bg-white shadow-sm">
+      <header className="bg-background border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold text-travel-blue">TravelPlannerElite</h1>
+            <h1 className="text-3xl font-bold text-primary">TravelPlannerElite</h1>
             <div className="flex items-center space-x-4">
+              <ThemeToggle />
               {user ? (
                 <>
                   <button
                     onClick={() => navigate('/dashboard')}
-                    className="text-gray-600 hover:text-travel-blue"
+                    className="text-foreground hover:text-primary"
                   >
                     Dashboard
                   </button>
                   <button
                     onClick={() => navigate('/my-trips')}
-                    className="text-gray-600 hover:text-travel-blue"
+                    className="text-foreground hover:text-primary"
                   >
                     My Trips
                   </button>
                   {user.role === 'admin' && (
                     <button
                       onClick={() => navigate('/admin')}
-                      className="text-gray-600 hover:text-travel-blue"
+                      className="text-foreground hover:text-primary"
                     >
                       Admin
                     </button>
@@ -89,7 +91,7 @@ const HomePage: React.FC = () => {
               ) : (
                 <button
                   onClick={() => navigate('/login')}
-                  className="bg-travel-blue text-white px-4 py-2 rounded-md hover:bg-travel-teal"
+                  className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90"
                 >
                   Login
                 </button>
