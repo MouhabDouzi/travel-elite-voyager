@@ -65,4 +65,5 @@ export const ItineraryPreview: React.FC<ItineraryPreviewProps> = ({ destination,
         ))}
       </div>
     </Card>
-  ); 
+  );
+};

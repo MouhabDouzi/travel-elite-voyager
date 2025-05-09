@@ -1,22 +1,21 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import FilterPanel from '../components/FilterPanel';
-import MapView from '../components/MapView';
-import WeatherInfo from '../components/WeatherInfo';
+import { FilterPanel } from '../components/FilterPanel';
+import { MapView } from '../components/MapView';
+import { WeatherInfo } from '../components/WeatherInfo';
 import { ItineraryPreview } from '../components/ItineraryPreview';
 import { AIAssistant } from '../components/AIAssistant';
 import { CommunityFeed } from '../components/CommunityFeed';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { Destination } from '../data/destinations';
-import { toast } from 'sonner';
-import { Toaster } from 'sonner';
-import HeroSection from '../components/HeroSection';
+import { toast, Toaster } from 'sonner';
+import { HeroSection } from '../components/HeroSection';
 import { Separator } from '../components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
-import TripPurposeSelector from '../components/TripPurposeSelector';
-import BudgetSlider from '../components/BudgetSlider';
-import DestinationCard from '../components/DestinationCard';
+import { TripPurposeSelector } from '../components/TripPurposeSelector';
+import { BudgetSlider } from '../components/BudgetSlider';
+import { DestinationCard } from '../components/DestinationCard';
 import { destinations } from '../data/destinations';
 
 const HomePage: React.FC = () => {
