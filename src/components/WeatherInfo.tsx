@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Card } from './ui/card';
 import { getWeatherForLocation, getWeatherIconUrl, WeatherData } from '../lib/weatherService';
 import { Destination } from '../data/destinations';
-import { Cloud, Droplets, Wind } from 'lucide-react';
+import { CloudIcon, DropletsIcon, WindIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface WeatherInfoProps {
@@ -80,7 +80,7 @@ const WeatherInfo: React.FC<WeatherInfoProps> = ({ destination }) => {
         <div className="flex items-center justify-between">
           <span className="text-gray-600">Humidity</span>
           <div className="flex items-center gap-1">
-            <Droplets className="h-4 w-4 text-blue-500" />
+            <DropletsIcon className="h-4 w-4 text-blue-500" />
             <span className="font-medium">{weather.humidity}%</span>
           </div>
         </div>
@@ -88,7 +88,7 @@ const WeatherInfo: React.FC<WeatherInfoProps> = ({ destination }) => {
         <div className="flex items-center justify-between">
           <span className="text-gray-600">Wind Speed</span>
           <div className="flex items-center gap-1">
-            <Wind className="h-4 w-4 text-blue-500" />
+            <WindIcon className="h-4 w-4 text-blue-500" />
             <span className="font-medium">{weather.windSpeed} m/s</span>
           </div>
         </div>
