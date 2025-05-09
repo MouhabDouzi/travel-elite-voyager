@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,7 +8,7 @@ interface BudgetSliderProps {
   onChange: (value: number) => void;
 }
 
-const BudgetSlider: React.FC<BudgetSliderProps> = ({ value, onChange }) => {
+export const BudgetSlider: React.FC<BudgetSliderProps> = ({ value, onChange }) => {
   // Format as currency
   const formatCurrency = (val: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -70,5 +69,3 @@ const BudgetSlider: React.FC<BudgetSliderProps> = ({ value, onChange }) => {
     </Card>
   );
 };
-
-export default BudgetSlider;

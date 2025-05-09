@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
-const HeroSection: React.FC = () => {
+export const HeroSection: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -103,5 +103,3 @@ const HeroSection: React.FC = () => {
     </div>
   );
 };
-
-export default HeroSection;

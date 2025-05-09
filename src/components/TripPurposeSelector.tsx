@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Check } from "lucide-react";
 
@@ -53,7 +52,7 @@ const options: TripPurposeOption[] = [
   }
 ];
 
-const TripPurposeSelector: React.FC<TripPurposeSelectorProps> = ({ selected, onSelect }) => {
+export const TripPurposeSelector: React.FC<TripPurposeSelectorProps> = ({ selected, onSelect }) => {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
       {options.map((option) => (
@@ -83,5 +82,3 @@ const TripPurposeSelector: React.FC<TripPurposeSelectorProps> = ({ selected, onS
     </div>
   );
 };
-
-export default TripPurposeSelector;

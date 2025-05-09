@@ -9,7 +9,7 @@ interface WeatherInfoProps {
   destination: Destination;
 }
 
-const WeatherInfo: React.FC<WeatherInfoProps> = ({ destination }) => {
+export const WeatherInfo: React.FC<WeatherInfoProps> = ({ destination }) => {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -95,6 +95,4 @@ const WeatherInfo: React.FC<WeatherInfoProps> = ({ destination }) => {
       </div>
     </Card>
   );
-};
-
-export default WeatherInfo; 
+}; 

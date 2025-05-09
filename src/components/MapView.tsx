@@ -23,7 +23,7 @@ interface MapViewProps {
   selectedDestination: Destination | null;
 }
 
-const MapView: React.FC<MapViewProps> = ({
+export const MapView: React.FC<MapViewProps> = ({
   destinations,
   onDestinationSelect,
   selectedDestination,
@@ -83,5 +83,3 @@ const MapView: React.FC<MapViewProps> = ({
     </div>
   );
 };
-
-export default MapView;

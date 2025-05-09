@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,7 +9,7 @@ interface DestinationCardProps {
   destination: Destination;
 }
 
-const DestinationCard: React.FC<DestinationCardProps> = ({ destination }) => {
+export const DestinationCard: React.FC<DestinationCardProps> = ({ destination }) => {
   // Helper function to display price level
   const getPriceDisplay = (level: number) => {
     return Array(5)
@@ -101,5 +100,3 @@ const DestinationCard: React.FC<DestinationCardProps> = ({ destination }) => {
     </Card>
   );
 };
-
-export default DestinationCard;

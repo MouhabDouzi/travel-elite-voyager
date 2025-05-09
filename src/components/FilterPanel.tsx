@@ -9,7 +9,7 @@ interface FilterPanelProps {
   onFilterChange: (destinations: Destination[]) => void;
 }
 
-const FilterPanel: React.FC<FilterPanelProps> = ({ onFilterChange }) => {
+export const FilterPanel: React.FC<FilterPanelProps> = ({ onFilterChange }) => {
   const [budget, setBudget] = useState<number>(1000);
   const [temperature, setTemperature] = useState<[number, number]>([0, 40]);
   const [purposes, setPurposes] = useState<string[]>([]);
@@ -127,5 +127,3 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ onFilterChange }) => {
     </Card>
   );
 };
-
-export default FilterPanel;
