@@ -1,179 +1,222 @@
-import React, { useState } from 'react';
-import { MessageCircle, Send, Loader2 } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Send, X } from 'lucide-react';
 import { toast } from 'sonner';
+import { travelDataService } from '../services/travelDataService';
+import { TravelRecommendation, Destination } from '../types/travel';
 
 interface Message {
-  id: string;
+  role: 'user' | 'assistant';
   content: string;
-  sender: 'user' | 'ai';
   timestamp: Date;
 }
 
-interface TravelRecommendation {
-  destination: string;
-  activities: string[];
-  bestTime: string;
-  tips: string[];
-}
-
-const AIAssistant: React.FC = () => {
+export function AIAssistant() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
-      id: '1',
-      content: 'Hello! I\'m your AI travel assistant. I can help you plan your next adventure, find the best destinations, and provide travel tips. What would you like to know?',
-      sender: 'ai',
+      role: 'assistant',
+      content: 'Hello! I\'m your AI travel assistant. I can help you plan your next adventure, find the best destinations, and provide personalized recommendations. What would you like to know?',
       timestamp: new Date(),
     },
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Mock travel recommendations database
-  const travelRecommendations: Record<string, TravelRecommendation> = {
-    'bali': {
-      destination: 'Bali, Indonesia',
-      activities: [
-        'Visit Ubud Monkey Forest',
-        'Explore rice terraces in Tegalalang',
-        'Relax at Nusa Penida beaches',
-        'Experience traditional dance performances',
-        'Try local cuisine at warungs'
-      ],
-      bestTime: 'April to October (dry season)',
-      tips: [
-        'Rent a scooter for easy transportation',
-        'Respect local customs and dress modestly',
-        'Learn basic Indonesian phrases',
-        'Book accommodations in advance during peak season'
-      ]
-    },
-    'paris': {
-      destination: 'Paris, France',
-      activities: [
-        'Visit the Eiffel Tower',
-        'Explore the Louvre Museum',
-        'Walk along the Seine River',
-        'Visit Notre-Dame Cathedral',
-        'Enjoy French cuisine at local bistros'
-      ],
-      bestTime: 'April to June and September to October',
-      tips: [
-        'Get a Paris Museum Pass for multiple attractions',
-        'Use the metro for efficient transportation',
-        'Book popular restaurants in advance',
-        'Visit attractions early morning to avoid crowds'
-      ]
-    },
-    'tokyo': {
-      destination: 'Tokyo, Japan',
-      activities: [
-        'Visit Senso-ji Temple',
-        'Explore Shibuya Crossing',
-        'Shop at Tsukiji Outer Market',
-        'Experience teamLab Borderless',
-        'Try authentic ramen and sushi'
-      ],
-      bestTime: 'March to May and September to November',
-      tips: [
-        'Get a Suica card for public transportation',
-        'Learn basic Japanese phrases',
-        'Carry cash as some places don\'t accept cards',
-        'Respect local customs and etiquette'
-      ]
-    }
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const generateAIResponse = (userInput: string): string => {
-    const input = userInput.toLowerCase();
-    
-    // Check for greetings
-    if (input.match(/^(hi|hello|hey|greetings)/i)) {
-      return "Hello! How can I help you plan your next adventure? I can provide destination recommendations, travel tips, or help with specific travel questions.";
-    }
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
-    // Check for destination recommendations
-    if (input.match(/recommend|suggest|where should|where to|best place/i)) {
-      return "I can recommend several amazing destinations based on your preferences. Would you like to know about:\n\n" +
-        "1. Bali - Perfect for culture, beaches, and nature\n" +
-        "2. Paris - Ideal for art, history, and romance\n" +
-        "3. Tokyo - Great for technology, food, and unique experiences\n\n" +
-        "Which one interests you the most?";
-    }
-
-    // Check for specific destination queries
-    for (const [key, data] of Object.entries(travelRecommendations)) {
-      if (input.includes(key)) {
-        return `Here's what you need to know about ${data.destination}:\n\n` +
-          `Best time to visit: ${data.bestTime}\n\n` +
-          `Top activities:\n${data.activities.map(a => `- ${a}`).join('\n')}\n\n` +
-          `Travel tips:\n${data.tips.map(t => `- ${t}`).join('\n')}`;
-      }
-    }
-
-    // Check for budget-related queries
-    if (input.match(/budget|cost|expensive|cheap|affordable/i)) {
-      return "I can help you plan a trip that fits your budget. Could you tell me:\n\n" +
-        "1. Your approximate budget\n" +
-        "2. Preferred destination\n" +
-        "3. Travel duration\n\n" +
-        "This will help me provide more specific recommendations!";
-    }
-
-    // Check for weather-related queries
-    if (input.match(/weather|climate|temperature|season/i)) {
-      return "Weather can significantly impact your travel experience. Could you specify which destination and time of year you're interested in? I can provide detailed climate information and packing suggestions.";
-    }
-
-    // Check for transportation queries
-    if (input.match(/transport|transportation|how to get|getting around/i)) {
-      return "Transportation options vary by destination. I can help you with:\n\n" +
-        "1. Best ways to reach your destination\n" +
-        "2. Local transportation options\n" +
-        "3. Transportation passes and cards\n" +
-        "4. Estimated costs\n\n" +
-        "Which destination are you planning to visit?";
-    }
-
-    // Default response for other queries
-    return "I understand you're interested in travel. To provide the most relevant information, could you please:\n\n" +
-      "1. Specify your destination of interest\n" +
-      "2. Mention your travel preferences (budget, activities, etc.)\n" +
-      "3. Ask about specific aspects you'd like to know more about\n\n" +
-      "This will help me give you more targeted recommendations!";
-  };
-
-  const handleSend = async () => {
+  const handleSendMessage = async () => {
     if (!input.trim()) return;
 
     const userMessage: Message = {
-      id: Date.now().toString(),
+      role: 'user',
       content: input,
-      sender: 'user',
       timestamp: new Date(),
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
 
     try {
-      // Simulate AI processing time
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Process user input and generate response
+      const response = await generateAIResponse(input);
       
-      const aiResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        content: generateAIResponse(input),
-        sender: 'ai',
+      const assistantMessage: Message = {
+        role: 'assistant',
+        content: response,
         timestamp: new Date(),
       };
-      
-      setMessages(prev => [...prev, aiResponse]);
+
+      setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
-      toast.error('Failed to get AI response');
+      console.error('Error generating response:', error);
+      toast.error('Failed to generate response. Please try again.');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const extractFiltersFromInput = (input: string) => {
+    const filters: any = {};
+
+    // Extract budget level
+    if (input.includes('budget') || input.includes('cheap')) {
+      filters.budget = 'budget';
+    } else if (input.includes('luxury') || input.includes('expensive')) {
+      filters.budget = 'luxury';
+    } else if (input.includes('mid') || input.includes('moderate')) {
+      filters.budget = 'midRange';
+    }
+
+    // Extract activities
+    const activities = [];
+    if (input.includes('beach')) activities.push('beach');
+    if (input.includes('hiking') || input.includes('mountain')) activities.push('hiking');
+    if (input.includes('culture') || input.includes('museum')) activities.push('culture');
+    if (input.includes('food') || input.includes('cuisine')) activities.push('food');
+    if (activities.length > 0) {
+      filters.activities = activities;
+    }
+
+    // Extract weather preference
+    if (input.includes('warm') || input.includes('hot')) {
+      filters.weather = 'warm';
+    } else if (input.includes('cold') || input.includes('snow')) {
+      filters.weather = 'cold';
+    }
+
+    // Extract duration
+    const durationMatch = input.match(/(\d+)\s*(?:day|week|month)/i);
+    if (durationMatch) {
+      filters.duration = parseInt(durationMatch[1]);
+    }
+
+    return filters;
+  };
+
+  const formatDestinationsResponse = (destinations: Destination[]): string => {
+    return 'Based on your preferences, here are some great destinations to consider:\n\n' +
+           destinations.map(dest => 
+             `📍 ${dest.name}, ${dest.country}\n` +
+             `   • Rating: ${dest.rating}/5 (${dest.reviews} reviews)\n` +
+             `   • Current weather: ${dest.weather.description}, ${dest.weather.temperature}°C\n` +
+             `   • Top activities: ${dest.activities.slice(0, 3).join(', ')}\n`
+           ).join('\n') +
+           '\nWould you like more details about any of these destinations?';
+  };
+
+  const formatDestinationDetails = (recommendation: TravelRecommendation): string => {
+    return `Here's what you need to know about ${recommendation.destination}:\n\n` +
+           `🌤️ Weather: ${recommendation.weather.description}, ${recommendation.weather.temperature}°C\n` +
+           `📅 Best time to visit: ${recommendation.bestTime}\n\n` +
+           `🎯 Top Activities:\n${recommendation.activities.slice(0, 5).map(activity => `   • ${activity}`).join('\n')}\n\n` +
+           `🍽️ Local Cuisine:\n${recommendation.localCuisine.slice(0, 3).map(food => `   • ${food}`).join('\n')}\n\n` +
+           `🚌 Transportation: ${recommendation.localTransportation.join(', ')}\n\n` +
+           `💡 Travel Tips:\n${recommendation.tips.slice(0, 3).map(tip => `   • ${tip}`).join('\n')}\n\n` +
+           `Would you like to know more about any specific aspect?`;
+  };
+
+  const formatWeatherResponse = (recommendation: TravelRecommendation): string => {
+    return `Current weather in ${recommendation.destination}:\n\n` +
+           `🌡️ Temperature: ${recommendation.weather.temperature}°C\n` +
+           `🌤️ Condition: ${recommendation.weather.description}\n` +
+           `💧 Humidity: ${recommendation.weather.humidity}%\n` +
+           `💨 Wind Speed: ${recommendation.weather.windSpeed} m/s\n\n` +
+           `Best time to visit: ${recommendation.bestTime}\n\n` +
+           `Would you like to know more about the destination?`;
+  };
+
+  const formatBudgetResponse = (recommendation: TravelRecommendation): string => {
+    return `Budget information for ${recommendation.destination}:\n\n` +
+           `🏨 Accommodation options:\n${recommendation.accommodation.slice(0, 3).map(acc => `   • ${acc}`).join('\n')}\n\n` +
+           `🚌 Transportation: ${recommendation.localTransportation.join(', ')}\n\n` +
+           `💡 Money-saving tips:\n${recommendation.tips.filter(tip => tip.toLowerCase().includes('budget') || tip.toLowerCase().includes('cost')).slice(0, 3).map(tip => `   • ${tip}`).join('\n')}\n\n` +
+           `Would you like more specific information about any aspect of the budget?`;
+  };
+
+  const generateAIResponse = async (userInput: string): Promise<string> => {
+    const input = userInput.toLowerCase();
+
+    // Handle greetings
+    if (input.includes('hello') || input.includes('hi') || input.includes('hey')) {
+      return 'Hello! How can I help you plan your next adventure?';
+    }
+
+    // Handle destination recommendations
+    if (input.includes('recommend') || input.includes('suggest') || input.includes('where should i go')) {
+      try {
+        const filters = extractFiltersFromInput(input);
+        const destinations = await travelDataService.fetchDestinations(filters);
+        
+        if (destinations.length === 0) {
+          return 'I couldn\'t find any destinations matching your criteria. Could you try different preferences?';
+        }
+
+        const topDestinations = destinations.slice(0, 3);
+        return formatDestinationsResponse(topDestinations);
+      } catch (error) {
+        console.error('Error fetching destinations:', error);
+        return 'I\'m having trouble fetching destination recommendations. Please try again later.';
+      }
+    }
+
+    // Handle specific destination queries
+    const destinationMatch = input.match(/(?:tell me about|information about|details about) (.+)/i);
+    if (destinationMatch) {
+      const destination = destinationMatch[1].trim();
+      try {
+        const recommendation = await travelDataService.fetchTravelRecommendation(destination);
+        return formatDestinationDetails(recommendation);
+      } catch (error) {
+        console.error('Error fetching destination details:', error);
+        return `I'm sorry, I couldn't find detailed information about ${destination}. Could you try a different destination?`;
+      }
+    }
+
+    // Handle weather queries
+    if (input.includes('weather') || input.includes('climate')) {
+      const locationMatch = input.match(/(?:weather|climate) (?:in|at|for) (.+)/i);
+      if (locationMatch) {
+        const location = locationMatch[1].trim();
+        try {
+          const recommendation = await travelDataService.fetchTravelRecommendation(location);
+          return formatWeatherResponse(recommendation);
+        } catch (error) {
+          console.error('Error fetching weather:', error);
+          return `I'm sorry, I couldn't find weather information for ${location}. Could you try a different location?`;
+        }
+      }
+    }
+
+    // Handle budget queries
+    if (input.includes('budget') || input.includes('cost') || input.includes('expensive')) {
+      const locationMatch = input.match(/(?:budget|cost|expensive) (?:in|at|for) (.+)/i);
+      if (locationMatch) {
+        const location = locationMatch[1].trim();
+        try {
+          const recommendation = await travelDataService.fetchTravelRecommendation(location);
+          return formatBudgetResponse(recommendation);
+        } catch (error) {
+          console.error('Error fetching budget information:', error);
+          return `I'm sorry, I couldn't find budget information for ${location}. Could you try a different location?`;
+        }
+      }
+    }
+
+    // Default response for unrecognized queries
+    return 'I\'m not sure I understand. Could you please rephrase your question? I can help you with:\n' +
+           '• Destination recommendations\n' +
+           '• Weather information\n' +
+           '• Budget planning\n' +
+           '• Local tips and activities\n' +
+           '• Travel logistics';
   };
 
   return (
@@ -181,71 +224,64 @@ const AIAssistant: React.FC = () => {
       {!isOpen ? (
         <button
           onClick={() => setIsOpen(true)}
-          className="bg-travel-blue text-white p-4 rounded-full shadow-lg hover:bg-travel-teal transition-colors"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full p-4 shadow-lg transition-all duration-300"
         >
-          <MessageCircle className="w-6 h-6" />
+          <Send className="h-6 w-6" />
         </button>
       ) : (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-96 h-[500px] flex flex-col">
-          <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-            <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">AI Travel Assistant</h3>
+        <div className="bg-background border rounded-lg shadow-xl w-96 h-[600px] flex flex-col">
+          <div className="p-4 border-b flex justify-between items-center">
+            <h3 className="font-semibold">AI Travel Assistant</h3>
             <button
               onClick={() => setIsOpen(false)}
-              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              className="text-muted-foreground hover:text-foreground"
             >
-              ×
+              <X className="h-5 w-5" />
             </button>
           </div>
 
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            {messages.map(message => (
+            {messages.map((message, index) => (
               <div
-                key={message.id}
+                key={index}
                 className={`flex ${
-                  message.sender === 'user' ? 'justify-end' : 'justify-start'
+                  message.role === 'user' ? 'justify-end' : 'justify-start'
                 }`}
               >
                 <div
                   className={`max-w-[80%] rounded-lg p-3 ${
-                    message.sender === 'user'
-                      ? 'bg-travel-blue text-white'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+                    message.role === 'user'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted'
                   }`}
                 >
-                  {message.content.split('\n').map((line, i) => (
-                    <React.Fragment key={i}>
-                      {line}
-                      {i < message.content.split('\n').length - 1 && <br />}
-                    </React.Fragment>
-                  ))}
+                  <p className="whitespace-pre-wrap">{message.content}</p>
+                  <span className="text-xs opacity-70 mt-1 block">
+                    {message.timestamp.toLocaleTimeString()}
+                  </span>
                 </div>
               </div>
             ))}
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-gray-100 dark:bg-gray-700 rounded-lg p-3">
-                  <Loader2 className="w-5 h-5 animate-spin text-travel-blue" />
-                </div>
-              </div>
-            )}
+            <div ref={messagesEndRef} />
           </div>
 
-          <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-            <div className="flex space-x-2">
+          <div className="p-4 border-t">
+            <div className="flex gap-2">
               <input
                 type="text"
                 value={input}
-                onChange={e => setInput(e.target.value)}
-                onKeyPress={e => e.key === 'Enter' && handleSend()}
-                placeholder="Ask about destinations, activities, or travel tips..."
-                className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-travel-blue dark:bg-gray-700 dark:text-white"
+                onChange={(e) => setInput(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                placeholder="Ask about destinations, weather, or travel tips..."
+                className="flex-1 bg-muted rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                disabled={isLoading}
               />
               <button
-                onClick={handleSend}
-                disabled={isLoading}
-                className="bg-travel-blue text-white px-4 py-2 rounded-lg hover:bg-travel-teal transition-colors disabled:opacity-50"
+                onClick={handleSendMessage}
+                disabled={isLoading || !input.trim()}
+                className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <Send className="w-5 h-5" />
+                {isLoading ? '...' : 'Send'}
               </button>
             </div>
           </div>
@@ -253,6 +289,6 @@ const AIAssistant: React.FC = () => {
       )}
     </div>
   );
-};
+}
 
 export default AIAssistant; 

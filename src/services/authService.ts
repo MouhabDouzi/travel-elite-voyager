@@ -1,6 +1,6 @@
 import { User, LoginCredentials, RegisterData } from '@/types/auth';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const API_URL = 'http://localhost:3000/api';
 
 export const authService = {
   async login(credentials: LoginCredentials): Promise<{ user: User; token: string }> {
