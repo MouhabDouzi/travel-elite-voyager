@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Heart, MessageCircle, Share2, Image as ImageIcon, X } from 'lucide-react';
+import { HeartIcon, MessageCircleIcon, Share2Icon, ImageIcon, XIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Post {
@@ -145,7 +145,7 @@ const CommunityFeed: React.FC = () => {
                 onClick={() => handleLike(post.id)}
                 className="flex items-center space-x-2 hover:text-travel-blue dark:hover:text-travel-light-blue"
               >
-                <Heart className="w-5 h-5" />
+                <HeartIcon className="w-5 h-5" />
                 <span>{post.likes}</span>
               </button>
               
@@ -153,7 +153,7 @@ const CommunityFeed: React.FC = () => {
                 onClick={() => handleComment(post.id)}
                 className="flex items-center space-x-2 hover:text-travel-blue dark:hover:text-travel-light-blue"
               >
-                <MessageCircle className="w-5 h-5" />
+                <MessageCircleIcon className="w-5 h-5" />
                 <span>{post.comments}</span>
               </button>
               
@@ -161,7 +161,7 @@ const CommunityFeed: React.FC = () => {
                 onClick={() => handleShare(post.id)}
                 className="flex items-center space-x-2 hover:text-travel-blue dark:hover:text-travel-light-blue"
               >
-                <Share2 className="w-5 h-5" />
+                <Share2Icon className="w-5 h-5" />
               </button>
             </div>
           </div>
@@ -186,7 +186,7 @@ const CommunityFeed: React.FC = () => {
                 onClick={() => setIsModalOpen(false)}
                 className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
               >
-                <X className="w-6 h-6" />
+                <XIcon className="w-6 h-6" />
               </button>
             </div>
 
