@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { HeartIcon, MessageCircleIcon, Share2Icon, ImageIcon, XIcon } from 'lucide-react';
+import { HeartIcon, MessageCircleIcon, Share2Icon, Image, XIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Post {
@@ -178,7 +178,7 @@ export const CommunityFeed: React.FC = () => {
         className="w-full py-3 bg-travel-blue text-white rounded-lg hover:bg-travel-teal transition-colors flex items-center justify-center space-x-2"
         onClick={() => setIsModalOpen(true)}
       >
-        <ImageIcon className="w-5 h-5" />
+        <Image className="w-5 h-5" />
         <span>Share Your Travel Story</span>
       </button>
 
