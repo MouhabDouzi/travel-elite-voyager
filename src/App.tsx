@@ -1,75 +1,73 @@
-import { Routes, Route } from 'react-router-dom';
-import { Toaster } from 'sonner';
-import ProtectedRoute from '@/components/ProtectedRoute';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from '@/contexts/AuthContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
+import Index from '@/pages/Index';
 import HomePage from '@/pages/HomePage';
 import LoginPage from '@/pages/LoginPage';
-import UserDashboard from '@/pages/user/DashboardPage';
-import MyTripsPage from '@/pages/user/MyTripsPage';
-import AdminDashboard from '@/pages/admin/DashboardPage';
-import AdminDestinations from '@/pages/admin/DestinationsPage';
-import AdminAnalytics from '@/pages/admin/AnalyticsPage';
-import AdminUsers from '@/pages/admin/UsersPage';
+import RegisterPage from '@/pages/RegisterPage';
+import DashboardPage from '@/pages/DashboardPage';
+import MyTripsPage from '@/pages/MyTripsPage';
+import AdminPage from '@/pages/AdminPage';
+import { useAuth } from '@/contexts/AuthContext';
 
-export default function App() {
+// Protected Route component
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user } = useAuth();
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+  return <>{children}</>;
+};
+
+// Admin Route component
+const AdminRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user } = useAuth();
+  if (!user || user.role !== 'admin') {
+    return <Navigate to="/" />;
+  }
+  return <>{children}</>;
+};
+
+const App: React.FC = () => {
   return (
-    <>
-      <Toaster position="top-right" />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        
-        {/* User Routes */}
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <UserDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/my-trips"
-          element={
-            <ProtectedRoute>
-              <MyTripsPage />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Admin Routes */}
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute requireAdmin>
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/destinations"
-          element={
-            <ProtectedRoute requireAdmin>
-              <AdminDestinations />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/analytics"
-          element={
-            <ProtectedRoute requireAdmin>
-              <AdminAnalytics />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/users"
-          element={
-            <ProtectedRoute requireAdmin>
-              <AdminUsers />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </>
+    <Router>
+      <ThemeProvider>
+        <AuthProvider>
+          <Routes>
+            {/* Public routes */}
+            <Route path="/" element={<Index />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            
+            {/* Protected routes */}
+            <Route path="/home" element={
+              <ProtectedRoute>
+                <HomePage />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <DashboardPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/my-trips" element={
+              <ProtectedRoute>
+                <MyTripsPage />
+              </ProtectedRoute>
+            } />
+            
+            {/* Admin routes */}
+            <Route path="/admin" element={
+              <AdminRoute>
+                <AdminPage />
+              </AdminRoute>
+            } />
+          </Routes>
+        </AuthProvider>
+      </ThemeProvider>
+    </Router>
   );
-}
+};
+
+export default App;
