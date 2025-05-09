@@ -9,7 +9,7 @@ interface ItineraryPreviewProps {
   days: number;
 }
 
-const ItineraryPreview: React.FC<ItineraryPreviewProps> = ({ destination, days }) => {
+export const ItineraryPreview: React.FC<ItineraryPreviewProps> = ({ destination, days }) => {
   const [itinerary, setItinerary] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -65,7 +65,4 @@ const ItineraryPreview: React.FC<ItineraryPreviewProps> = ({ destination, days }
         ))}
       </div>
     </Card>
-  );
-};
-
-export default ItineraryPreview; 
+  ); 

@@ -16,7 +16,7 @@ interface Post {
   destination: string;
 }
 
-const CommunityFeed: React.FC = () => {
+export const CommunityFeed: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([
     {
       id: '1',
@@ -260,6 +260,4 @@ const CommunityFeed: React.FC = () => {
       )}
     </div>
   );
-};
-
-export default CommunityFeed; 
+}; 
