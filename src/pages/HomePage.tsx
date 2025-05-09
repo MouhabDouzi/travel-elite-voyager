@@ -1,23 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
-import FilterPanel from '../components/FilterPanel';
-import MapView from '../components/MapView';
-import WeatherInfo from '../components/WeatherInfo';
+import { FilterPanel } from '../components/FilterPanel';
+import { MapView } from '../components/MapView';
+import { WeatherInfo } from '../components/WeatherInfo';
 import { ItineraryPreview } from '../components/ItineraryPreview';
 import { AIAssistant } from '../components/AIAssistant';
 import { CommunityFeed } from '../components/CommunityFeed';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { Destination } from '../data/destinations';
 import { toast, Toaster } from 'sonner';
-import HeroSection from '../components/HeroSection';
+import { HeroSection } from '../components/HeroSection';
 import { Separator } from '../components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
-import TripPurposeSelector from '../components/TripPurposeSelector';
-import BudgetSlider from '../components/BudgetSlider';
-import DestinationCard from '../components/DestinationCard';
+import { TripPurposeSelector } from '../components/TripPurposeSelector';
+import { BudgetSlider } from '../components/BudgetSlider';
+import { DestinationCard } from '../components/DestinationCard';
 import { destinations } from '../data/destinations';
+
+type TabType = 'discover' | 'weather' | 'budget';
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -25,32 +27,32 @@ const HomePage: React.FC = () => {
   const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null);
   const [filteredDestinations, setFilteredDestinations] = useState<Destination[]>([]);
   const [tripDays, setTripDays] = useState<number>(3);
-  const [activeTab, setActiveTab] = useState<'explore' | 'community'>('explore');
+  const [activeTab, setActiveTab] = useState<TabType>('discover');
   const [selectedPurpose, setSelectedPurpose] = useState<string | null>(null);
-  const [budget, setBudget] = useState(3000);
+  const [budget, setBudget] = useState<number>(3000);
 
-  const handleFilterChange = (destinations: Destination[]) => {
+  const handleFilterChange = useCallback((destinations: Destination[]) => {
     setFilteredDestinations(destinations);
     if (selectedDestination && !destinations.includes(selectedDestination)) {
       setSelectedDestination(null);
       toast.info('Selected destination was filtered out');
     }
-  };
+  }, [selectedDestination]);
 
-  const handleDestinationSelect = (destination: Destination) => {
+  const handleDestinationSelect = useCallback((destination: Destination) => {
     setSelectedDestination(destination);
     toast.success(`Selected ${destination.name}`);
-  };
+  }, []);
 
-  const handleTripDaysChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTripDaysChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
     if (!isNaN(value) && value >= 1 && value <= 14) {
       setTripDays(value);
       toast.info(`Trip duration updated to ${value} days`);
     }
-  };
+  }, []);
 
-  const handlePlanTrip = async () => {
+  const handlePlanTrip = useCallback(async () => {
     if (!user) {
       toast.error('Please log in to plan a trip');
       navigate('/login');
@@ -77,7 +79,7 @@ const HomePage: React.FC = () => {
       console.error('Error planning trip:', error);
       toast.error('Failed to plan trip. Please try again.');
     }
-  };
+  }, [user, selectedDestination, tripDays, selectedPurpose, budget, navigate]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -164,7 +166,7 @@ const HomePage: React.FC = () => {
         </div>
         
         {/* Tabs for different views */}
-        <Tabs defaultValue="discover" className="mt-10">
+        <Tabs defaultValue="discover" className="mt-10" onValueChange={(value) => setActiveTab(value as TabType)}>
           <TabsList className="mb-6">
             <TabsTrigger value="discover">Discover Destinations</TabsTrigger>
             <TabsTrigger value="weather">Climate Insights</TabsTrigger>
@@ -196,53 +198,18 @@ const HomePage: React.FC = () => {
           </TabsContent>
 
           <TabsContent value="budget">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="text-xl font-semibold mb-4">Budget Breakdown</h3>
-                <div className="bg-white p-6 rounded-lg border shadow-sm">
-                  <p className="text-gray-600 mb-4">
-                    For a 7-day trip with your budget of <span className="font-semibold text-travel-teal">{
-                      new Intl.NumberFormat('en-US', {
-                        style: 'currency',
-                        currency: 'USD',
-                        maximumFractionDigits: 0,
-                      }).format(budget)
-                    }</span>, you could expect:
-                  </p>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Flight (round-trip)</span>
-                      <span className="font-medium">${Math.round(budget * 0.4)}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Accommodation (7 nights)</span>
-                      <span className="font-medium">${Math.round(budget * 0.35)}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Daily expenses (food, transport)</span>
-                      <span className="font-medium">${Math.round(budget * 0.15)}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Activities & experiences</span>
-                      <span className="font-medium">${Math.round(budget * 0.1)}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            {selectedDestination && (
+              <ItineraryPreview destination={selectedDestination} days={tripDays} />
+            )}
           </TabsContent>
         </Tabs>
         
         {/* Featured Destinations */}
         <div className="mt-16">
           <h2 className="text-2xl font-bold text-travel-blue mb-6">
-            Popular Destinations
+            Travel Community
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {destinations.map((destination) => (
-              <DestinationCard key={destination.id} destination={destination} />
-            ))}
-          </div>
+          <CommunityFeed />
         </div>
       </div>
 
