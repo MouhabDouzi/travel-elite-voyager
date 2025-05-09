@@ -63,11 +63,11 @@ const CommunityFeed: React.FC = () => {
     toast.success('Liked post!');
   };
 
-  const handleComment = (postId: string) => {
+  const handleComment = (postId: string | number) => {
     toast.info('Comment feature coming soon!');
   };
 
-  const handleShare = (postId: string) => {
+  const handleShare = (postId: string | number) => {
     toast.info('Share feature coming soon!');
   };
 

@@ -6,7 +6,7 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { formatCurrency } from '../lib/utils';
-import { Plus, Trash2 } from 'lucide-react';
+import { PlusIcon, Trash2Icon } from 'lucide-react';
 import { toast } from 'sonner';
 
 const EXPENSE_CATEGORIES = [
@@ -149,7 +149,7 @@ const ExpenseTracker: React.FC = () => {
               </div>
             </div>
             <Button type="submit" className="w-full">
-              <Plus className="mr-2 h-4 w-4" />
+              <PlusIcon className="mr-2 h-4 w-4" />
               Add Expense
             </Button>
           </form>
