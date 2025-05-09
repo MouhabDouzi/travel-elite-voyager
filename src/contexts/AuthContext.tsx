@@ -10,7 +10,7 @@ interface AuthContextType extends AuthState {
   updatePreferences: (preferences: Partial<User['preferences']>) => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AuthState>({
