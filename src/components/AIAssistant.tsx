@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Destination } from '@/data/destinations';
+import { Destination } from '@/types/travel';
 import { WeatherInfo } from '@/types/travel';
 
 interface AIAssistantProps {
@@ -23,9 +23,8 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({ destination, weather }
       // Mock AI response for development
       const response = `Based on the current weather (${weather.condition}, ${weather.temperature}°C) in ${destination.name}, I recommend:
 1. ${weather.temperature > 25 ? 'Stay hydrated and wear sunscreen' : 'Bring a light jacket'}
-2. Best time to visit: ${destination.purposes.join(', ')}
-3. Popular activities: ${destination.activities.map(a => a.name).join(', ')}`;
-      
+2. Best time to visit: ${destination.rating ? 'Highly rated' : 'Anytime'}
+3. Popular activities: ${destination.activities?.join(', ') || 'Explore local attractions'}`;
       setAnswer(response);
     } catch (error) {
       console.error('Error getting AI response:', error);

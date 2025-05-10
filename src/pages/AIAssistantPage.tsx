@@ -1,7 +1,6 @@
-import { useAuth } from '@/contexts/AuthContext';
 import UserNav from '@/components/user/UserNav';
 import { AIAssistant } from '@/components/AIAssistant';
-import { Destination } from '@/data/destinations';
+import { Destination } from '@/types/travel';
 import { useState, useEffect } from 'react';
 import { travelDataService } from '@/services/travelDataService';
 
@@ -51,13 +50,7 @@ export default function AIAssistantPage() {
           {!loading && selectedDestination && (
             <AIAssistant
               destination={selectedDestination}
-              weather={{
-                temperature: selectedDestination.temperature,
-                condition: selectedDestination.weather[0] || 'Unknown',
-                description: selectedDestination.weather[0] || 'Unknown',
-                humidity: 50,
-                windSpeed: 5
-              }}
+              weather={selectedDestination.weather}
             />
           )}
         </div>

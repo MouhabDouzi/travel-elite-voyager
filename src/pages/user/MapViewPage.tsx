@@ -1,10 +1,11 @@
+import React from 'react';
 import UserNav from '@/components/user/UserNav';
 import { MapView } from '@/components/MapView';
-import { Destination } from '@/data/destinations';
+import { Destination } from '@/types/travel';
 import { travelDataService } from '@/services/travelDataService';
 import { useState, useEffect } from 'react';
 
-export default function MapViewPage() {
+const MapViewPage: React.FC = () => {
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null);
   const [loading, setLoading] = useState(false);
@@ -57,4 +58,6 @@ export default function MapViewPage() {
       </div>
     </div>
   );
-} 
+};
+
+export default MapViewPage; 

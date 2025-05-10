@@ -1,12 +1,11 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { PrivateRoute } from './PrivateRoute';
-import HomePage from '@/pages/HomePage';
 import LoginPage from '@/pages/auth/LoginPage';
 import RegisterPage from '@/pages/auth/RegisterPage';
-import UserDashboard from '@/pages/user/DashboardPage';
+import DashboardPage from '@/pages/user/DashboardPage';
 import MyTripsPage from '@/pages/user/MyTripsPage';
 import DiscoverPage from '@/pages/DiscoverPage';
-import MapViewPage from '@/pages/MapViewPage';
+import MapViewPage from '@/pages/user/MapViewPage';
 import AIAssistantPage from '@/pages/AIAssistantPage';
 import PhotosPage from '@/pages/PhotosPage';
 import ProfilePage from '@/pages/user/ProfilePage';
@@ -34,7 +33,7 @@ export const router = createBrowserRouter([
     path: '/dashboard',
     element: (
       <PrivateRoute>
-        <UserDashboard />
+        <DashboardPage />
       </PrivateRoute>
     ),
   },

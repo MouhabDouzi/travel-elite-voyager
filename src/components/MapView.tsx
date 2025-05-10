@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Destination } from '@/data/destinations';
+import { Destination } from '@/types/travel';
 
 // Fix for default marker icons
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -40,7 +40,7 @@ export const MapView: React.FC<MapViewProps> = ({
 
     // Add new markers
     destinations.forEach((destination) => {
-      const marker = L.marker([destination.latitude, destination.longitude])
+      const marker = L.marker([destination.coordinates.lat, destination.coordinates.lng])
         .addTo(mapRef.current!)
         .bindPopup(
           `<div class="p-2">

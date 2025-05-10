@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card } from './ui/card';
 import { travelDataService } from '@/services/travelDataService';
-import { Destination } from '@/data/destinations';
+import { Destination } from '@/types/travel';
 import { WeatherInfo as WeatherInfoType } from '@/types/travel';
 import { Droplets, Wind } from 'lucide-react';
 
@@ -19,8 +19,8 @@ export const WeatherInfo: React.FC<WeatherInfoProps> = ({ destination }) => {
       try {
         setLoading(true);
         const data = await travelDataService.fetchWeatherInfo(
-          destination.latitude,
-          destination.longitude
+          destination.coordinates.lat,
+          destination.coordinates.lng
         );
         setWeather(data);
         setError(null);
@@ -56,44 +56,27 @@ export const WeatherInfo: React.FC<WeatherInfoProps> = ({ destination }) => {
   }
 
   return (
-    <Card className="p-4 hover:shadow-lg transition-shadow">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-medium text-travel-blue">Current Weather</h3>
-        <div className="text-4xl">
-          {weather.condition === 'Clear' && '☀️'}
-          {weather.condition === 'Clouds' && '☁️'}
-          {weather.condition === 'Rain' && '🌧️'}
-          {weather.condition === 'Snow' && '❄️'}
+    <Card className="p-4">
+      <div className="flex items-center gap-4">
+        <div>
+          <div className="text-lg font-semibold">{destination.name}</div>
+          <div className="text-sm text-gray-500">{destination.country}</div>
         </div>
-      </div>
-
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <span className="text-gray-600">Temperature</span>
-          <span className="font-medium">{weather.temperature}°C</span>
-        </div>
-
-        <div className="flex items-center justify-between">
-          <span className="text-gray-600">Conditions</span>
-          <span className="font-medium capitalize">{weather.description}</span>
-        </div>
-
-        <div className="flex items-center justify-between">
-          <span className="text-gray-600">Humidity</span>
+        <div className="ml-auto flex items-center gap-4">
           <div className="flex items-center gap-1">
-            <Droplets className="h-4 w-4 text-blue-500" />
-            <span className="font-medium">{weather.humidity}%</span>
+            <Droplets className="h-4 w-4 text-blue-400" />
+            <span>{weather.humidity}%</span>
           </div>
-        </div>
-
-        <div className="flex items-center justify-between">
-          <span className="text-gray-600">Wind Speed</span>
           <div className="flex items-center gap-1">
-            <Wind className="h-4 w-4 text-blue-500" />
-            <span className="font-medium">{weather.windSpeed} m/s</span>
+            <Wind className="h-4 w-4 text-gray-400" />
+            <span>{weather.windSpeed} m/s</span>
           </div>
         </div>
       </div>
+      <div className="mt-4 text-2xl font-bold">
+        {weather.temperature}°C - {weather.condition}
+      </div>
+      <div className="text-gray-600 mt-2">{weather.description}</div>
     </Card>
   );
 }; 

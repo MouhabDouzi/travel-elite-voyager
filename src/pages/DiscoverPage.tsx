@@ -3,7 +3,7 @@ import UserNav from '@/components/user/UserNav';
 import { FilterPanel } from '@/components/FilterPanel';
 import { MapView } from '@/components/MapView';
 import { WeatherInfo } from '@/components/WeatherInfo';
-import { Destination } from '@/data/destinations';
+import { Destination } from '@/types/travel';
 import { travelDataService } from '@/services/travelDataService';
 import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
