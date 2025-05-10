@@ -20,7 +20,7 @@ const Index: React.FC = () => {
               <Button variant="ghost" onClick={() => navigate('/login')}>
                 Login
               </Button>
-              <Button onClick={() => navigate('/home')}>
+              <Button onClick={() => navigate('/discover')}>
                 Get Started
               </Button>
             </div>
@@ -38,7 +38,7 @@ const Index: React.FC = () => {
             Discover amazing destinations, get personalized recommendations, and create unforgettable travel experiences.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" onClick={() => navigate('/home')}>
+            <Button size="lg" onClick={() => navigate('/discover')}>
               Start Planning
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
@@ -91,7 +91,7 @@ const Index: React.FC = () => {
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             Connect with fellow travelers, share experiences, and get inspired for your next adventure.
           </p>
-          <Button size="lg" onClick={() => navigate('/home')}>
+          <Button size="lg" onClick={() => navigate('/discover')}>
             Join Now
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>

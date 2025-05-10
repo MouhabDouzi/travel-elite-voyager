@@ -1,18 +1,22 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { toast } from 'sonner';
+import { Map, Compass, MessageSquare, Image, User, Settings, LogOut } from 'lucide-react';
 
 export default function UserNav() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
 
   const handleLogout = async () => {
     try {
       await logout();
+      toast.success('Successfully logged out!');
       navigate('/login');
     } catch (error) {
-      console.error('Logout failed:', error);
+      toast.error('Failed to log out');
     }
   };
 
@@ -20,56 +24,51 @@ export default function UserNav() {
     return location.pathname === path;
   };
 
+  const navItems = [
+    { path: '/dashboard', label: 'Dashboard', icon: Compass },
+    { path: '/my-trips', label: 'My Trips', icon: Map },
+    { path: '/discover', label: 'Discover', icon: Compass },
+    { path: '/map', label: 'Map', icon: Map },
+    { path: '/ai-assistant', label: 'AI Assistant', icon: MessageSquare },
+    { path: '/photos', label: 'Photos', icon: Image },
+    { path: '/profile', label: 'Profile', icon: User },
+    { path: '/settings', label: 'Settings', icon: Settings },
+  ];
+
   return (
-    <nav className="bg-white shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex">
-            <div className="flex-shrink-0 flex items-center">
-              <h1 className="text-xl font-bold text-gray-900">
-                TravelPlannerElite
-              </h1>
-            </div>
-            <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <button
-                onClick={() => navigate('/')}
-                className={`${
-                  isActive('/')
-                    ? 'border-blue-500 text-gray-900'
-                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
-              >
-                Home
-              </button>
-              <button
-                onClick={() => navigate('/dashboard')}
-                className={`${
-                  isActive('/dashboard')
-                    ? 'border-blue-500 text-gray-900'
-                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
-              >
-                Dashboard
-              </button>
-              <button
-                onClick={() => navigate('/my-trips')}
-                className={`${
-                  isActive('/my-trips')
-                    ? 'border-blue-500 text-gray-900'
-                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
-              >
-                My Trips
-              </button>
-            </div>
-          </div>
+    <nav className="fixed w-full bg-background/80 backdrop-blur-sm border-b z-50">
+      <div className="container mx-auto px-4">
+        <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <button
+            <h1 className="text-xl font-bold text-primary">TravelPlannerElite</h1>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Button
+                  key={item.path}
+                  variant={isActive(item.path) ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => navigate(item.path)}
+                  className="flex items-center gap-2"
+                >
+                  <Icon className="h-4 w-4" />
+                  <span className="hidden sm:inline">{item.label}</span>
+                </Button>
+              );
+            })}
+            <ThemeToggle />
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={handleLogout}
-              className="ml-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="flex items-center gap-2"
             >
-              Logout
-            </button>
+              <LogOut className="h-4 w-4" />
+              <span className="hidden sm:inline">Logout</span>
+            </Button>
           </div>
         </div>
       </div>

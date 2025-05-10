@@ -5,15 +5,22 @@ import LoginPage from '@/pages/auth/LoginPage';
 import RegisterPage from '@/pages/auth/RegisterPage';
 import UserDashboard from '@/pages/user/DashboardPage';
 import MyTripsPage from '@/pages/user/MyTripsPage';
+import DiscoverPage from '@/pages/DiscoverPage';
+import MapViewPage from '@/pages/MapViewPage';
+import AIAssistantPage from '@/pages/AIAssistantPage';
+import PhotosPage from '@/pages/PhotosPage';
+import ProfilePage from '@/pages/user/ProfilePage';
+import SettingsPage from '@/pages/user/SettingsPage';
 import AdminDashboard from '@/pages/admin/DashboardPage';
 import ManageDestinations from '@/pages/admin/DestinationsPage';
 import AnalyticsPage from '@/pages/admin/AnalyticsPage';
 import NotFound from '@/pages/NotFound';
+import Index from '@/pages/Index';
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <HomePage />,
+    element: <Index />,
   },
   {
     path: '/login',
@@ -24,7 +31,7 @@ export const router = createBrowserRouter([
     element: <RegisterPage />,
   },
   {
-    path: '/user/dashboard',
+    path: '/dashboard',
     element: (
       <PrivateRoute>
         <UserDashboard />
@@ -32,10 +39,58 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: '/user/trips',
+    path: '/discover',
+    element: (
+      <PrivateRoute>
+        <DiscoverPage />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: '/my-trips',
     element: (
       <PrivateRoute>
         <MyTripsPage />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: '/map',
+    element: (
+      <PrivateRoute>
+        <MapViewPage />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: '/ai-assistant',
+    element: (
+      <PrivateRoute>
+        <AIAssistantPage />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: '/photos',
+    element: (
+      <PrivateRoute>
+        <PhotosPage />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: '/profile',
+    element: (
+      <PrivateRoute>
+        <ProfilePage />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: '/settings',
+    element: (
+      <PrivateRoute>
+        <SettingsPage />
       </PrivateRoute>
     ),
   },
