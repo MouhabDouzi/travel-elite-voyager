@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Destination } from '@/types/travel';
+import { Destination } from '@/data/destinations';
 
 interface FilterPanelProps {
   onFilterChange: (filters: {

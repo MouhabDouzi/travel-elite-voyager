@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { Destination, TravelRecommendation, WeatherInfo } from '../types/travel';
+import { Destination } from '@/data/destinations';
+import { WeatherInfo } from '@/types/travel';
 
 const API_KEYS = {
   OPENWEATHER: '340aade475a3a32e534f140253953d42',
@@ -67,48 +68,40 @@ const generateLocalTips = (data: any): string[] => {
 const mockDestinations: Destination[] = [
   {
     id: '1',
-    name: 'Paris',
-    country: 'France',
-    description: 'The City of Light',
-    imageUrl: 'https://images.unsplash.com/photo-1502602898657-3a917209c20e',
-    coordinates: {
-      lat: 48.8566,
-      lng: 2.3522,
-    },
-    rating: 4.8,
-    reviews: 15000,
-    priceLevel: 3,
-    activities: ['Eiffel Tower', 'Louvre Museum', 'Notre-Dame'],
-    weather: {
-      temperature: 20,
-      condition: 'Clear',
-      description: 'clear sky',
-      humidity: 65,
-      windSpeed: 5,
-    },
+    name: 'Bali, Indonesia',
+    description: 'Tropical paradise with beautiful beaches and rich culture',
+    latitude: -8.4095,
+    longitude: 115.1889,
+    budget: 1500,
+    temperature: 28,
+    purposes: ['Leisure', 'Adventure', 'Romantic'],
+    weather: ['Sunny', 'Rainy'],
+    imageUrl: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4',
+    activities: [
+      { name: 'Visit Ubud Monkey Forest', duration: '2 hours', cost: 20 },
+      { name: 'Tegallalang Rice Terraces', duration: '3 hours', cost: 15 },
+      { name: 'Uluwatu Temple', duration: '2 hours', cost: 10 },
+      { name: 'Beach Day at Kuta', duration: 'Full day', cost: 30 },
+    ]
   },
   {
     id: '2',
-    name: 'Tokyo',
-    country: 'Japan',
-    description: 'A vibrant blend of traditional and modern culture',
-    imageUrl: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf',
-    coordinates: {
-      lat: 35.6762,
-      lng: 139.6503,
-    },
-    rating: 4.7,
-    reviews: 12000,
-    priceLevel: 4,
-    activities: ['Shibuya Crossing', 'Tokyo Skytree', 'Senso-ji Temple'],
-    weather: {
-      temperature: 22,
-      condition: 'Clouds',
-      description: 'scattered clouds',
-      humidity: 70,
-      windSpeed: 3,
-    },
-  },
+    name: 'Paris, France',
+    description: 'City of love, art, and exquisite cuisine',
+    latitude: 48.8566,
+    longitude: 2.3522,
+    budget: 2500,
+    temperature: 15,
+    purposes: ['Romantic', 'Culture', 'Leisure'],
+    weather: ['Cloudy', 'Rainy'],
+    imageUrl: 'https://images.unsplash.com/photo-1502602898657-3a917209c20e',
+    activities: [
+      { name: 'Eiffel Tower Visit', duration: '3 hours', cost: 30 },
+      { name: 'Louvre Museum', duration: '4 hours', cost: 20 },
+      { name: 'Seine River Cruise', duration: '1 hour', cost: 25 },
+      { name: 'Notre-Dame Cathedral', duration: '2 hours', cost: 0 },
+    ]
+  }
 ];
 
 export const travelDataService = {
@@ -162,7 +155,17 @@ export const travelDataService = {
     }
   },
 
-  async fetchTravelRecommendation(destination: string): Promise<TravelRecommendation> {
+  async fetchTravelRecommendation(destination: string): Promise<{
+    destination: string;
+    activities: string[];
+    bestTime: string;
+    tips: string[];
+    weather: WeatherInfo;
+    localTransportation: string[];
+    accommodation: string[];
+    localCuisine: string[];
+    culturalTips: string[];
+  }> {
     try {
       // For development, return mock data
       return {

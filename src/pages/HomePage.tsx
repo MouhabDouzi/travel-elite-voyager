@@ -1,24 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { FilterPanel } from '../components/FilterPanel';
-import { MapView } from '../components/MapView';
-import { WeatherInfo } from '../components/WeatherInfo';
-import { ItineraryPreview } from '../components/ItineraryPreview';
-import { AIAssistant } from '../components/AIAssistant';
-import { CommunityFeed } from '../components/CommunityFeed';
-import { ThemeToggle } from '../components/ThemeToggle';
-import { Destination } from '../data/destinations';
-import { toast, Toaster } from 'sonner';
-import { HeroSection } from '../components/HeroSection';
-import { Separator } from '../components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
-import { TripPurposeSelector } from '../components/TripPurposeSelector';
-import { BudgetSlider } from '../components/BudgetSlider';
-import { DestinationCard } from '../components/DestinationCard';
-import { destinations } from '../data/destinations';
-import { travelDataService } from '../services/travelDataService';
-import { TravelRecommendation } from '../types/travel';
+import { useAuth } from '@/contexts/AuthContext';
+import { FilterPanel } from '@/components/FilterPanel';
+import { MapView } from '@/components/MapView';
+import { WeatherInfo } from '@/components/WeatherInfo';
+import { Destination } from '@/data/destinations';
+import { travelDataService } from '@/services/travelDataService';
 
 type TabType = 'discover' | 'weather' | 'budget';
 
@@ -33,6 +20,24 @@ export const HomePage = () => {
   const [budget, setBudget] = useState<number>(1000);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Load initial destinations
+  useEffect(() => {
+    const loadInitialDestinations = async () => {
+      try {
+        setLoading(true);
+        const results = await travelDataService.fetchDestinations();
+        setDestinations(results);
+      } catch (error) {
+        setError('Failed to load destinations. Please try again.');
+        console.error('Error loading destinations:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadInitialDestinations();
+  }, []);
 
   const handleTripDaysChange = useCallback((days: number) => {
     setTripDays(days);
@@ -147,7 +152,13 @@ export const HomePage = () => {
                 </div>
               )}
 
-              {activeTab === 'discover' && (
+              {loading && (
+                <div className="flex justify-center items-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                </div>
+              )}
+
+              {!loading && activeTab === 'discover' && (
                 <MapView
                   destinations={destinations}
                   onDestinationSelect={handleDestinationSelect}
@@ -155,13 +166,13 @@ export const HomePage = () => {
                 />
               )}
 
-              {activeTab === 'weather' && selectedDestination && (
+              {!loading && activeTab === 'weather' && selectedDestination && (
                 <WeatherInfo
                   destination={selectedDestination}
                 />
               )}
 
-              {activeTab === 'budget' && selectedDestination && (
+              {!loading && activeTab === 'budget' && selectedDestination && (
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold">Budget Planning</h3>
                   <p>Selected Budget: ${budget}</p>

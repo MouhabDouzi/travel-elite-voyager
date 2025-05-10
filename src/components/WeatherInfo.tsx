@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Card } from './ui/card';
-import { travelDataService } from '../services/travelDataService';
-import { Destination, WeatherInfo as WeatherInfoType } from '../types/travel';
+import { travelDataService } from '@/services/travelDataService';
+import { Destination } from '@/data/destinations';
+import { WeatherInfo as WeatherInfoType } from '@/types/travel';
 import { Droplets, Wind } from 'lucide-react';
 
 interface WeatherInfoProps {
@@ -18,8 +19,8 @@ export const WeatherInfo: React.FC<WeatherInfoProps> = ({ destination }) => {
       try {
         setLoading(true);
         const data = await travelDataService.fetchWeatherInfo(
-          destination.coordinates.lat,
-          destination.coordinates.lng
+          destination.latitude,
+          destination.longitude
         );
         setWeather(data);
         setError(null);
