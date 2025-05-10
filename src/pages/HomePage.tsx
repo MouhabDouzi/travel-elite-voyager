@@ -5,10 +5,11 @@ import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Separator } from '@/components/ui/separator';
 import { ArrowRight, Globe, Map, Calendar, Users } from 'lucide-react';
+import { User } from '@/types/auth';
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user } = useAuth(); // user: User | null
 
   return (
     <div className="min-h-screen bg-background">

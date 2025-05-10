@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import { User } from '@/types/auth';
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -13,12 +14,11 @@ export default function ProfilePage() {
   const [formData, setFormData] = React.useState({
     name: user?.name || '',
     email: user?.email || '',
-    bio: user?.bio || '',
-    location: user?.location || '',
     preferences: {
       theme: user?.preferences?.theme || 'light',
       language: user?.preferences?.language || 'en',
-      notifications: user?.preferences?.notifications || true,
+      notifications: user?.preferences?.notifications ?? true,
+      units: user?.preferences?.units || 'metric',
     }
   });
 
@@ -74,28 +74,6 @@ export default function ProfilePage() {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="Your email"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="bio">Bio</Label>
-                <Input
-                  id="bio"
-                  name="bio"
-                  value={formData.bio}
-                  onChange={handleChange}
-                  placeholder="Tell us about yourself"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="location">Location</Label>
-                <Input
-                  id="location"
-                  name="location"
-                  value={formData.location}
-                  onChange={handleChange}
-                  placeholder="Your location"
                 />
               </div>
             </div>

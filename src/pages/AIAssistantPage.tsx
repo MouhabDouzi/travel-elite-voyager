@@ -5,6 +5,7 @@ import { AIAssistant } from '@/components/AIAssistant';
 import { Destination } from '@/data/destinations';
 import { useState, useEffect } from 'react';
 import { travelDataService } from '@/services/travelDataService';
+import { User } from '@/types/auth';
 
 export default function AIAssistantPage() {
   const { user } = useAuth();

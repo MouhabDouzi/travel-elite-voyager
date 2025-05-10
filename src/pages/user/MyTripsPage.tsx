@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import UserNav from '@/components/user/UserNav';
+import { User } from '@/types/auth';
 
 interface Trip {
   id: string;
