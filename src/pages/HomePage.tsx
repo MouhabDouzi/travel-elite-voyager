@@ -1,15 +1,11 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Separator } from '@/components/ui/separator';
 import { ArrowRight, Globe, Map, Calendar, Users } from 'lucide-react';
-import { User } from '@/types/auth';
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const { user } = useAuth(); // user: User | null
 
   return (
     <div className="min-h-screen bg-background">
@@ -20,20 +16,9 @@ export default function HomePage() {
             <h1 className="text-2xl font-bold text-primary">TravelPlannerElite</h1>
             <div className="flex items-center gap-4">
               <ThemeToggle />
-              {!user ? (
-                <>
-                  <Button variant="ghost" onClick={() => navigate('/login')}>
-                    Login
-                  </Button>
-                  <Button onClick={() => navigate('/discover')}>
-                    Get Started
-                  </Button>
-                </>
-              ) : (
-                <Button onClick={() => navigate('/discover')}>
-                  Go to Dashboard
-                </Button>
-              )}
+              <Button onClick={() => navigate('/discover')}>
+                Get Started
+              </Button>
             </div>
           </div>
         </div>
@@ -53,11 +38,6 @@ export default function HomePage() {
               Start Planning
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
-            {!user && (
-              <Button size="lg" variant="outline" onClick={() => navigate('/login')}>
-                Sign In
-              </Button>
-            )}
           </div>
         </div>
       </section>

@@ -1,5 +1,3 @@
-import React from 'react';
-import { useAuth } from '@/contexts/AuthContext';
 import UserNav from '@/components/user/UserNav';
 import { MapView } from '@/components/MapView';
 import { Destination } from '@/data/destinations';
@@ -7,7 +5,6 @@ import { travelDataService } from '@/services/travelDataService';
 import { useState, useEffect } from 'react';
 
 export default function MapViewPage() {
-  const { user } = useAuth();
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null);
   const [loading, setLoading] = useState(false);

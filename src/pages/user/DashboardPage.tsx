@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import UserNav from '@/components/user/UserNav';
-import CommunityFeed from '@/components/CommunityFeed';
-import ExpenseTracker from '@/components/ExpenseTracker';
-import TravelAnalytics from '@/components/TravelAnalytics';
-import TravelHistoryManager from '@/components/TravelHistoryManager';
+import { CommunityFeed } from '@/components/CommunityFeed';
+import { ExpenseTracker } from '@/components/ExpenseTracker';
+import { TravelAnalytics } from '@/components/TravelAnalytics';
+import { TravelHistoryManager } from '@/components/TravelHistoryManager';
 
 interface UserPreferences {
   theme: 'light' | 'dark';

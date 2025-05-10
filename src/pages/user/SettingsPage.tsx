@@ -15,7 +15,6 @@ export default function SettingsPage() {
     theme: user?.preferences?.theme || 'light',
     language: user?.preferences?.language || 'en',
     notifications: user?.preferences?.notifications || true,
-    emailNotifications: user?.preferences?.emailNotifications || true,
     darkMode: user?.preferences?.darkMode || false,
   });
 
@@ -82,15 +81,6 @@ export default function SettingsPage() {
                   id="notifications"
                   checked={settings.notifications}
                   onCheckedChange={(checked) => setSettings(prev => ({ ...prev, notifications: checked }))}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <Label htmlFor="emailNotifications">Email Notifications</Label>
-                <Switch
-                  id="emailNotifications"
-                  checked={settings.emailNotifications}
-                  onCheckedChange={(checked) => setSettings(prev => ({ ...prev, emailNotifications: checked }))}
                 />
               </div>
 

@@ -1,7 +1,5 @@
 import { User, LoginCredentials, RegisterData } from '@/types/auth';
 
-const API_URL = 'http://localhost:3000/api';
-
 export const authService = {
   async login(credentials: LoginCredentials): Promise<{ user: User; token: string }> {
     // For demo purposes, simulate API call

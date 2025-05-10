@@ -1,4 +1,3 @@
-import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import UserNav from '@/components/user/UserNav';
 import { FilterPanel } from '@/components/FilterPanel';
@@ -8,12 +7,6 @@ import { Destination } from '@/data/destinations';
 import { travelDataService } from '@/services/travelDataService';
 import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User as BaseUser } from '@/types/auth';
-
-interface AdminUser extends BaseUser {
-  status: 'active' | 'inactive';
-  lastLogin: string;
-}
 
 export default function DiscoverPage() {
   const navigate = useNavigate();

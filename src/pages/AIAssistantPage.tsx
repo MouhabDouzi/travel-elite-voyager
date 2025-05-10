@@ -1,14 +1,11 @@
-import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import UserNav from '@/components/user/UserNav';
 import { AIAssistant } from '@/components/AIAssistant';
 import { Destination } from '@/data/destinations';
 import { useState, useEffect } from 'react';
 import { travelDataService } from '@/services/travelDataService';
-import { User } from '@/types/auth';
 
 export default function AIAssistantPage() {
-  const { user } = useAuth();
   const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -54,6 +51,13 @@ export default function AIAssistantPage() {
           {!loading && selectedDestination && (
             <AIAssistant
               destination={selectedDestination}
+              weather={{
+                temperature: selectedDestination.temperature,
+                condition: selectedDestination.weather[0] || 'Unknown',
+                description: selectedDestination.weather[0] || 'Unknown',
+                humidity: 50,
+                windSpeed: 5
+              }}
             />
           )}
         </div>
